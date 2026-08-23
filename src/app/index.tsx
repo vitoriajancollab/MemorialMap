@@ -6,7 +6,9 @@ import {
   StyleSheet,
   TextInput,
   Button,
+  Pressable,
 } from 'react-native';
+import { router } from 'expo-router';
 
 export default function Index() {
   const [nome, setNome] = useState('');
@@ -44,7 +46,14 @@ export default function Index() {
           onChangeText={setNome}
         />
 
-        <Button title="Pesquisar" onPress={pesquisar} />
+        <Button title="Pesquisar" onPress={pesquisar}/>
+
+        <Pressable
+         style={styles.botaoAdmin}
+         onPress={() => router.push('/admin')}
+         >
+          <Text style={styles.textoAdmin}>⚙️ Área do Administrador</Text>
+          </Pressable>
 
         {resultado.map((item: any) => (
 
@@ -54,7 +63,7 @@ export default function Index() {
            <Text>📍 Quadra: {item.Quadra}</Text>
            <Text>🪦 Lote: {item.Lote}</Text>
          <Text>
-            📅 Falecimento: {item.DataFalecimento.substring(0, 10)}
+            📅 Falecimento: {item.DataFalecimento?.substring(0, 10)}
            </Text>      
                </View>
         ))}
@@ -101,4 +110,15 @@ const styles = StyleSheet.create({
   resultado: {
     fontSize: 18,
   },
+
+  botaoAdmin: {
+  marginTop: 15,
+  padding: 12,
+},
+
+textoAdmin: {
+  color: '#4a6fa5',
+  fontSize: 16,
+  fontWeight: 'bold',
+},
 });
