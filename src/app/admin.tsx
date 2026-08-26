@@ -1,35 +1,77 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function Admin() {
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Área do Administrador</Text>
 
-      <Text style={styles.subtitulo}>
-        Gerencie os registros do Memorial Map
-      </Text>
+      <View style={styles.cabecalho}>
+        <Text style={styles.icone}>⚙️</Text>
 
-      <Pressable
-        style={styles.botao}
-        onPress={() => alert('Em breve: cadastrar falecido')}
-      >
-        <Text style={styles.textoBotao}>Cadastrar Falecido</Text>
-      </Pressable>
+        <Text style={styles.titulo}>
+          Área do Administrador
+        </Text>
 
-      <Pressable
-        style={styles.botao}
-        onPress={() => alert('Em breve: visualizar registros')}
-      >
-        <Text style={styles.textoBotao}>📋 Ver Registros</Text>
-      </Pressable>
+        <Text style={styles.subtitulo}>
+          Gerencie os registros do Memorial Map
+        </Text>
+      </View>
+
+      <View style={styles.menu}>
+
+        <Pressable
+          style={styles.card}
+          onPress={() => router.push('/cadastro')}
+        >
+          <View style={styles.iconeCard}>
+            <Text style={styles.emoji}>➕</Text>
+          </View>
+
+          <View style={styles.informacoes}>
+            <Text style={styles.tituloCard}>
+              Cadastrar Falecido
+            </Text>
+
+            <Text style={styles.descricao}>
+              Adicione um novo registro ao Memorial Map
+            </Text>
+          </View>
+
+          <Text style={styles.seta}>›</Text>
+        </Pressable>
+
+        <Pressable
+          style={styles.card}
+          onPress={() => alert('Em breve: visualizar registros')}
+        >
+          <View style={styles.iconeCard}>
+            <Text style={styles.emoji}>📋</Text>
+          </View>
+
+          <View style={styles.informacoes}>
+            <Text style={styles.tituloCard}>
+              Ver Registros
+            </Text>
+
+            <Text style={styles.descricao}>
+              Consulte os falecidos cadastrados
+            </Text>
+          </View>
+
+          <Text style={styles.seta}>›</Text>
+        </Pressable>
+
+      </View>
 
       <Pressable
         style={styles.botaoVoltar}
         onPress={() => router.back()}
       >
-        <Text style={styles.textoVoltar}>← Voltar</Text>
+        <Text style={styles.textoVoltar}>
+          ← Voltar
+        </Text>
       </Pressable>
+
     </View>
   );
 }
@@ -37,42 +79,99 @@ export default function Admin() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f4f6f8',
     padding: 20,
+  },
+
+  cabecalho: {
+    alignItems: 'center',
+    marginTop: 50,
+    marginBottom: 35,
+  },
+
+  icone: {
+    fontSize: 42,
+    marginBottom: 10,
   },
 
   titulo: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 10,
+    color: '#1f2937',
     textAlign: 'center',
   },
 
   subtitulo: {
     fontSize: 16,
-    color: '#666',
-    marginBottom: 30,
+    color: '#6b7280',
+    marginTop: 8,
     textAlign: 'center',
   },
 
-  botao: {
-    width: '90%',
-    backgroundColor: '#4a6fa5',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 15,
-    alignItems: 'center',
+  menu: {
+    width: '100%',
   },
 
-  textoBotao: {
-    color: '#fff',
-    fontSize: 17,
+  card: {
+    width: '100%',
+    minHeight: 90,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    marginBottom: 18,
+    padding: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+
+    elevation: 4,
+  },
+
+  iconeCard: {
+    width: 55,
+    height: 55,
+    borderRadius: 14,
+    backgroundColor: '#e8eef7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 15,
+  },
+
+  emoji: {
+    fontSize: 25,
+  },
+
+  informacoes: {
+    flex: 1,
+  },
+
+  tituloCard: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#1f2937',
+    marginBottom: 5,
+  },
+
+  descricao: {
+    fontSize: 14,
+    color: '#6b7280',
+    lineHeight: 20,
+  },
+
+  seta: {
+    fontSize: 30,
+    color: '#4a6fa5',
+    marginLeft: 8,
   },
 
   botaoVoltar: {
+    alignSelf: 'center',
     marginTop: 15,
     padding: 12,
   },
@@ -80,5 +179,6 @@ const styles = StyleSheet.create({
   textoVoltar: {
     fontSize: 16,
     color: '#4a6fa5',
+    fontWeight: '600',
   },
 });
