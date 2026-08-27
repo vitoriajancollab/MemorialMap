@@ -42,8 +42,8 @@ export default function Admin() {
 
         <Pressable
           style={styles.card}
-          onPress={() => alert('Em breve: visualizar registros')}
-        >
+          onPress={() => router.push('/registros')}        >
+
           <View style={styles.iconeCard}>
             <Text style={styles.emoji}>📋</Text>
           </View>

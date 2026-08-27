@@ -19,6 +19,7 @@ export default function Cadastro() {
   const [longitude, setLongitude] = useState('');
   const [falecidos, setFalecidos] = useState<any[]>([]);
   const [idEditando, setIdEditando] = useState<number | null>(null);
+  const [mostrarRegistros, setMostrarRegistros] = useState(false);
 
   async function carregarFalecidos() {
   try {
@@ -81,6 +82,18 @@ function editarFalecido(falecido: any) {
     new Date(falecido.DataFalecimento).toLocaleDateString('pt-BR')
   );
 }
+
+function converterDataParaAPI(data: string) {
+  if (!data) return null;
+
+  const partes = data.split('/');
+
+  if (partes.length === 3) {
+    return `${partes[2]}-${partes[1]}-${partes[0]}`;
+  }
+
+  return data;
+}
 async function salvarEdicao() {
   if (idEditando === null) {
     return;
@@ -96,8 +109,8 @@ async function salvarEdicao() {
         },
         body: JSON.stringify({
           Nome: nome,
-          DataNascimento: dataNascimento,
-          DataFalecimento: dataFalecimento,
+          DataNascimento: converterDataParaAPI(dataNascimento),
+          DataFalecimento: converterDataParaAPI(dataFalecimento),
           Cemiterio: cemiterio || null,
           Quadra: quadra || null,
           Lote: lote || null,
@@ -271,8 +284,17 @@ async function salvarEdicao() {
     </Text>
     </Pressable>
 
-{falecidos.map((falecido) => (
-  <View key={falecido.Id} style={styles.card}>
+      <Pressable
+     style={styles.botaoVer}
+     onPress={() => setMostrarRegistros(!mostrarRegistros)}
+  >
+     <Text style={styles.textoBotao}>
+     {mostrarRegistros ? 'Ocultar Registros' : '📋 Ver Registros'}
+     </Text>
+     </Pressable>
+
+    {mostrarRegistros && falecidos.map((falecido) => (
+    <View key={falecido.Id} style={styles.card}>
     <Text style={styles.nomeFalecido}>
       {falecido.Nome}
     </Text>
@@ -288,7 +310,7 @@ async function salvarEdicao() {
      <Pressable
         style={styles.botaoEditar}
         onPress={() => editarFalecido(falecido)}
->
+ >
     <Text style={styles.textoBotao}>
     ✏️ Editar
     </Text>
@@ -304,16 +326,16 @@ async function salvarEdicao() {
       </Text>
     </Pressable>
   </View>
-))}
-
-
+ ))}
     </ScrollView>
     
+    
   );
+
+
+  
   
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -383,5 +405,13 @@ botaoEditar: {
   borderRadius: 8,
   alignItems: 'center',
   marginTop: 12,
+},
+
+botaoVer: {
+  backgroundColor: '#6a1b9a',
+  padding: 15,
+  borderRadius: 8,
+  alignItems: 'center',
+  marginTop: 15,
 },
 });

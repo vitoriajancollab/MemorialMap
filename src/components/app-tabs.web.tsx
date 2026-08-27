@@ -1,13 +1,13 @@
 import {
-  Tabs,
   TabList,
-  TabTrigger,
-  TabSlot,
-  TabTriggerSlotProps,
   TabListProps,
+  Tabs,
+  TabSlot,
+  TabTrigger,
+  TabTriggerSlotProps,
 } from 'expo-router/ui';
 import { SymbolView } from 'expo-symbols';
-import { Pressable, useColorScheme, View, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
 
 import { ExternalLink } from './external-link';
 import { ThemedText } from './themed-text';
@@ -22,11 +22,12 @@ export default function AppTabs() {
       <TabList asChild>
         <CustomTabList>
           <TabTrigger name="home" href="/" asChild>
-            <TabButton>Sobre</TabButton>
-          </TabTrigger>
-          <TabTrigger name="explore" href="/explore" asChild>
-            <TabButton>Busca</TabButton>
-          </TabTrigger>
+  <TabButton>Início</TabButton>
+</TabTrigger>
+
+       <TabTrigger name="admin" href="/admin" asChild>
+       <TabButton>Administrador</TabButton>
+       </TabTrigger>
         </CustomTabList>
       </TabList>
     </Tabs>
@@ -77,13 +78,13 @@ export function CustomTabList(props: TabListProps) {
 
 const styles = StyleSheet.create({
   tabListContainer: {
-    position: 'absolute',
-    width: '100%',
-    padding: Spacing.three,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
+  position: 'absolute',
+  width: '100%',
+  padding: Spacing.three,
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'row',
+},
   innerContainer: {
     paddingVertical: Spacing.two,
     paddingHorizontal: Spacing.five,
