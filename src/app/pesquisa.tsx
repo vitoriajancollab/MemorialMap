@@ -1,0 +1,375 @@
+import { router } from 'expo-router';
+import { useState } from 'react';
+import {
+  ImageBackground,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+
+export default function Index() {
+  const [nome, setNome] = useState('');
+  const [resultado, setResultado] = useState<any[]>([]);
+  const [carregando, setCarregando] = useState(false);
+  const [pesquisou, setPesquisou] = useState(false);
+
+  function formatarData(data: string) {
+  if (!data) return '-';
+
+  const dataObj = new Date(data);
+
+  return dataObj.toLocaleDateString('pt-BR');
+}
+
+  async function pesquisar() {
+  if (!nome.trim()) {
+    alert('Digite o nome de uma pessoa para pesquisar.');
+    return;
+  }
+
+  try {
+    setCarregando(true);
+    setPesquisou(true);
+
+    const resposta = await fetch(
+      'http://192.168.1.74:3000/falecidos'
+    );
+
+    const dados = await resposta.json();
+
+    const filtrados = dados.filter((item: any) =>
+      item.Nome.toLowerCase().includes(nome.toLowerCase())
+    );
+
+    setResultado(filtrados);
+  } catch (erro) {
+    alert('Erro ao conectar com a API.');
+    console.log(erro);
+  } finally {
+    setCarregando(false);
+  }
+}
+
+  return (
+    <ImageBackground
+      source={require('@/assets/images/fundo.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+
+          {/* Área de pesquisa */}
+          <View style={styles.caixaPesquisa}>
+
+            <Text style={styles.titulo}>
+              Encontre uma pessoa
+            </Text>
+
+            <Text style={styles.subtitulo}>
+              Pesquise pelo nome para localizar uma pessoa
+            </Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Digite o nome completo"
+              placeholderTextColor="#777"
+              value={nome}
+              onChangeText={setNome}
+            />
+
+            <Pressable
+              style={styles.botaoPesquisar}
+              onPress={pesquisar}
+            >
+              <Text style={styles.textoPesquisar}>
+                🔎  Pesquisar
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.botaoAdmin}
+              onPress={() => router.push('/admin')}
+            >
+              <Text style={styles.textoAdmin}>
+                ⚙️  Área do Administrador
+              </Text>
+            </Pressable>
+
+          </View>
+    {carregando && (
+  <Text style={styles.carregando}>
+    ⏳ Buscando registros...
+  </Text>
+)}
+
+{pesquisou && !carregando && resultado.length === 0 && (
+  <View style={styles.semResultado}>
+    <Text style={styles.iconeSemResultado}>🔎</Text>
+
+    <Text style={styles.tituloSemResultado}>
+      Nenhum registro encontrado
+    </Text>
+
+    <Text style={styles.textoSemResultado}>
+      Tente pesquisar utilizando outro nome.
+    </Text>
+  </View>
+)}
+          {resultado.map((item: any) => (
+  <View
+    key={item.Id.toString()}
+    style={styles.card}
+  >
+    <Text style={styles.resultado}>
+      👤 {item.Nome}
+    </Text>
+
+    <View style={styles.linha} />
+
+    <Text style={styles.info}>
+      🏛️ {item.Cemiterio}
+    </Text>
+
+    <Text style={styles.info}>
+      📍 Quadra {item.Quadra} • Lote {item.Lote}
+    </Text>
+
+    <View style={styles.datas}>
+      <View style={styles.dataBox}>
+        <Text style={styles.dataLabel}>
+          Nascimento
+        </Text>
+
+        <Text style={styles.dataValor}>
+          {formatarData(item.DataNascimento)}
+        </Text>
+      </View>
+
+      <View style={styles.dataBox}>
+        <Text style={styles.dataLabel}>
+          Falecimento
+        </Text>
+
+        <Text style={styles.dataValor}>
+          {formatarData(item.DataFalecimento)}
+        </Text>
+      </View>
+    </View>
+
+    <Pressable
+      style={styles.botaoMapa}
+      onPress={() => {
+        alert('Mapa será adicionado em breve! 🗺️');
+      }}
+    >
+      <Text style={styles.textoMapa}>
+        🗺️ Ver localização
+      </Text>
+    </Pressable>
+  </View>
+))}
+
+        </View>
+      </ScrollView>
+    </ImageBackground>
+  );
+}
+
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+
+  scroll: {
+    flexGrow: 1,
+  },
+
+container: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingHorizontal: 20,
+},
+
+  caixaPesquisa: {
+  width: '88%',
+  maxWidth: 460,
+  backgroundColor: 'rgba(255,255,255,0.94)',
+  padding: 18,
+  borderRadius: 20,
+  alignItems: 'center',
+  marginBottom: 0,
+},
+
+  titulo: {
+    color: '#243b53',
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+
+  subtitulo: {
+    color: '#52606d',
+    fontSize: 13,
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+
+  input: {
+    width: '100%',
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 12,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#d0d7de',
+  },
+
+ botaoPesquisar: {
+  width: '100%',
+  backgroundColor: '#294f7d',
+  padding: 14,
+  borderRadius: 12,
+  alignItems: 'center',
+  marginBottom: 10,
+},
+
+  textoPesquisar: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+
+  botaoAdmin: {
+  width: '100%',
+  padding: 12,
+  borderRadius: 12,
+  borderWidth: 1,
+  borderColor: '#294f7d',
+  backgroundColor: 'rgba(255,255,255,0.7)',
+  alignItems: 'center',
+},
+
+  textoAdmin: {
+    color: '#4a6fa5',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+
+ card: {
+  width: '90%',
+  maxWidth: 500,
+  backgroundColor: 'rgba(255,255,255,0.97)',
+  marginTop: 18,
+  padding: 20,
+  borderRadius: 20,
+  borderWidth: 1,
+  borderColor: '#e1e5e8',
+},
+
+  resultado: {
+  fontSize: 21,
+  fontWeight: 'bold',
+  color: '#243b53',
+  marginBottom: 12,
+},
+
+  info: {
+  fontSize: 15,
+  color: '#52606d',
+  marginBottom: 8,
+},
+  carregando: {
+  marginTop: 20,
+  fontSize: 16,
+  color: '#243b53',
+  fontWeight: 'bold',
+},
+
+semResultado: {
+  width: '90%',
+  maxWidth: 500,
+  marginTop: 18,
+  padding: 22,
+  borderRadius: 18,
+  backgroundColor: 'rgba(255,255,255,0.94)',
+  alignItems: 'center',
+},
+
+iconeSemResultado: {
+  fontSize: 30,
+  marginBottom: 8,
+},
+
+tituloSemResultado: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  color: '#243b53',
+  textAlign: 'center',
+  marginBottom: 5,
+},
+
+textoSemResultado: {
+  fontSize: 14,
+  color: '#667085',
+  textAlign: 'center',
+},
+linha: {
+  width: '100%',
+  height: 1,
+  backgroundColor: '#e1e5e8',
+  marginBottom: 14,
+},
+
+datas: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  width: '100%',
+  marginTop: 12,
+  marginBottom: 16,
+},
+
+dataBox: {
+  width: '48%',
+  backgroundColor: '#f5f7fa',
+  padding: 12,
+  borderRadius: 12,
+},
+
+dataLabel: {
+  fontSize: 12,
+  color: '#7b8794',
+  marginBottom: 4,
+},
+
+dataValor: {
+  fontSize: 15,
+  fontWeight: 'bold',
+  color: '#243b53',
+},
+
+botaoMapa: {
+  width: '100%',
+  backgroundColor: '#294f7d',
+  padding: 13,
+  borderRadius: 12,
+  alignItems: 'center',
+},
+
+textoMapa: {
+  color: '#fff',
+  fontSize: 15,
+  fontWeight: 'bold',
+},
+});

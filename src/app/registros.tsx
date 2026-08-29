@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   Pressable,
@@ -50,134 +51,503 @@ export default function Registros() {
         onChangeText={setPesquisa}
       />
 
-      {registrosFiltrados.length === 0 ? (
-        <Text style={styles.semRegistros}>
-          Nenhum registro encontrado.
-        </Text>
-      ) : (
+      <View style={styles.resumo}>
+  <View style={styles.resumoIcone}>
+    <Text style={styles.resumoEmoji}>
+      📋
+    </Text>
+  </View>
+
+  <View>
+    <Text style={styles.resumoNumero}>
+      {registrosFiltrados.length}
+    </Text>
+
+    <Text style={styles.resumoTexto}>
+      {registrosFiltrados.length === 1
+        ? 'registro encontrado'
+        : 'registros encontrados'}
+    </Text>
+  </View>
+</View>
+
+     {registrosFiltrados.length === 0 ? (
+  <View style={styles.semRegistros}>
+    <Text style={styles.iconeSemRegistros}>
+      📭
+    </Text>
+
+    <Text style={styles.tituloSemRegistros}>
+      Nenhum registro encontrado
+    </Text>
+
+    <Text style={styles.textoSemRegistros}>
+      Tente pesquisar por outro nome.
+    </Text>
+  </View>
+) : (
         registrosFiltrados.map((falecido) => (
-          <View key={falecido.Id} style={styles.card}>
-            <Text style={styles.nome}>
-              {falecido.Nome}
-            </Text>
+       <Pressable
+       key={falecido.Id}
+       style={({ pressed }) => [
+       styles.card,
+       pressed && styles.cardPressionado,
+  ]}
+>
 
-            <Text style={styles.informacao}>
-                Nascimento:{' '}
-              {new Date(
-                falecido.DataNascimento
-              ).toLocaleDateString('pt-BR')}
-            </Text>
+       <View style={styles.cabecalhoCard}>
 
-            <Text style={styles.informacao}>
-                Falecimento:{' '}
-              {new Date(
-                falecido.DataFalecimento
-              ).toLocaleDateString('pt-BR')}
-            </Text>
+       <View style={styles.iconeFalecido}>
+       <Text style={styles.emojiFalecido}>🕊️</Text>
+       </View>
 
-            <Text style={styles.informacao}>
-              📍 Cemitério:{' '}
-              {falecido.Cemiterio || 'Não informado'}
-            </Text>
+       <View style={styles.nomeContainer}>
+        <Text style={styles.nome}>
+        {falecido.Nome}
+        </Text>
 
-            <Text style={styles.informacao}>
-              Quadra: {falecido.Quadra || 'Não informado'}
-            </Text>
+      <Text style={styles.identificador}>
+        Registro #{falecido.Id}
+      </Text>
+    </View>
 
-            <Text style={styles.informacao}>
-              Lote: {falecido.Lote || 'Não informado'}
-            </Text>
+ </View>
+
+            <View style={styles.linha} />
+<View style={styles.datasContainer}>
+
+  <View style={styles.dataBox}>
+    <Text style={styles.rotulo}>
+      Nascimento
+    </Text>
+
+    <Text style={styles.data}>
+      {new Date(
+        falecido.DataNascimento
+      ).toLocaleDateString('pt-BR')}
+    </Text>
+  </View>
+
+  <View style={styles.dataBox}>
+    <Text style={styles.rotulo}>
+      Falecimento
+    </Text>
+
+    <Text style={styles.data}>
+      {new Date(
+        falecido.DataFalecimento
+      ).toLocaleDateString('pt-BR')}
+    </Text>
+  </View>
+
+ </View>
+           <View style={styles.localizacao}>
+
+  <Text style={styles.rotulo}>
+    📍 Localização
+  </Text>
+
+  <View style={styles.cemiterioContainer}>
+  <Text style={styles.iconeLocal}>
+    📍
+  </Text>
+
+  <Text style={styles.cemiterio}>
+    {falecido.Cemiterio || 'Não informado'}
+  </Text>
+</View>
+
+  <View style={styles.localContainer}>
+
+    <View style={styles.localBox}>
+      <Text style={styles.rotulo}>
+        Quadra
+      </Text>
+
+      <Text style={styles.valorLocal}>
+        {falecido.Quadra || 'Não informado'}
+      </Text>
+    </View>
+
+    <View style={styles.localBox}>
+      <Text style={styles.rotulo}>
+        Lote
+      </Text>
+
+      <Text style={styles.valorLocal}>
+        {falecido.Lote || 'Não informado'}
+      </Text>
+    </View>
+
+  </View>
+
+</View>
 
             <Pressable
-              style={styles.botaoMapa}
-              onPress={() =>
+              style={({ pressed }) => [
+                  styles.botaoMapa,
+                pressed && styles.botaoMapaPressionado,
+                ]}
+               onPress={() =>
                 alert('Em breve: localização no mapa')
               }
-            >
-              <Text style={styles.textoBotao}>
-                🗺️ Ver no mapa
+             >
+              <View style={styles.conteudoBotao}>
+              <Text style={styles.iconeBotao}>
+                🗺️
               </Text>
+
+              <Text style={styles.textoBotao}>
+              Ver no mapa
+             </Text>
+            </View>
             </Pressable>
-          </View>
+          </Pressable>
         ))
       )}
+            <Pressable
+        style={({ pressed }) => [
+          styles.botaoVoltar,
+          pressed && styles.botaoVoltarPressionado,
+        ]}
+        onPress={() => router.push('/admin')}
+      >
+        <Text style={styles.textoVoltar}>
+          ← Voltar
+        </Text>
+      </Pressable>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: '#f4f6f8',
-    flexGrow: 1,
-  },
+  paddingHorizontal: 20,
+  paddingTop: 25,
+  paddingBottom: 30,
+  backgroundColor: '#f4f6f8',
+  flexGrow: 1,
+},
 
   titulo: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#1f2937',
-    marginTop: 20,
-  },
+  fontSize: 30,
+  fontWeight: '800',
+  textAlign: 'center',
+  color: '#1f2937',
+  marginTop: 25,
+  letterSpacing: 0.3,
+},
 
   subtitulo: {
-    textAlign: 'center',
-    color: '#6b7280',
-    fontSize: 16,
-    marginTop: 8,
-    marginBottom: 25,
-  },
+  textAlign: 'center',
+  color: '#6b7280',
+  fontSize: 15,
+  marginTop: 8,
+  marginBottom: 28,
+  lineHeight: 21,
+},
 
   input: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    padding: 14,
-    fontSize: 16,
-    marginBottom: 15,
+  backgroundColor: '#ffffff',
+  borderRadius: 14,
+  paddingHorizontal: 18,
+  height: 52,
+  fontSize: 16,
+  color: '#1f2937',
+  marginBottom: 20,
+
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
   },
+  shadowOpacity: 0.08,
+  shadowRadius: 5,
+
+  elevation: 3,
+},
 
   card: {
-    backgroundColor: '#fff',
-    padding: 18,
-    borderRadius: 15,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
+  backgroundColor: '#ffffff',
+  padding: 20,
+  borderRadius: 18,
+  marginBottom: 18,
 
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 3,
+  },
+  shadowOpacity: 0.10,
+  shadowRadius: 6,
+
+  elevation: 4,
+},
+
+cardPressionado: {
+  opacity: 0.96,
+  transform: [{ scale: 0.99 }],
+},
+
+  cabecalhoCard: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 16,
+},
+
+  iconeFalecido: {
+  width: 52,
+  height: 52,
+  borderRadius: 14,
+  backgroundColor: '#e8eef7',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginRight: 14,
+},
+
+ emojiFalecido: {
+  fontSize: 24,
+},
+
+ nomeContainer: {
+  flex: 1,
+},
+
+ identificador: {
+  fontSize: 13,
+  color: '#9ca3af',
+  marginTop: 3,
+},
   nome: {
-    fontSize: 21,
-    fontWeight: 'bold',
-    color: '#1f2937',
-    marginBottom: 12,
-  },
-
+  fontSize: 20,
+  fontWeight: '700',
+  color: '#1f2937',
+  marginBottom: 14,
+  letterSpacing: 0.2,
+},
   informacao: {
-    fontSize: 15,
-    color: '#4b5563',
-    marginBottom: 6,
-  },
-
+  fontSize: 15,
+  color: '#4b5563',
+  marginBottom: 8,
+  lineHeight: 21,
+},
   semRegistros: {
-    textAlign: 'center',
-    marginTop: 30,
-    color: '#6b7280',
-    fontSize: 16,
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '#ffffff',
+  borderRadius: 18,
+  padding: 30,
+  marginTop: 10,
+
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
   },
+  shadowOpacity: 0.06,
+  shadowRadius: 5,
+
+  elevation: 2,
+},
+
+  iconeSemRegistros: {
+  fontSize: 42,
+  marginBottom: 12,
+},
+
+  tituloSemRegistros: {
+  fontSize: 18,
+  fontWeight: '700',
+  color: '#374151',
+},
+
+  textoSemRegistros: {
+  fontSize: 14,
+  color: '#9ca3af',
+  marginTop: 6,
+  textAlign: 'center',
+},
 
   botaoMapa: {
-    backgroundColor: '#4a6fa5',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 12,
-  },
+  backgroundColor: '#4a6fa5',
+  height: 48,
+  borderRadius: 12,
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginTop: 16,
 
-  textoBotao: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
   },
+  shadowOpacity: 0.12,
+  shadowRadius: 4,
+
+  elevation: 3,
+},
+
+  conteudoBotao: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+  iconeBotao: {
+  fontSize: 18,
+  marginRight: 7,
+},
+
+ textoBotao: {
+  color: '#ffffff',
+  fontSize: 15,
+  fontWeight: '700',
+  letterSpacing: 0.2,
+},
+  resumo: {
+  backgroundColor: '#ffffff',
+  borderRadius: 16,
+  padding: 14,
+  marginBottom: 18,
+  flexDirection: 'row',
+  alignItems: 'center',
+
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.06,
+  shadowRadius: 5,
+
+  elevation: 2,
+},
+
+  resumoIcone: {
+  width: 45,
+  height: 45,
+  borderRadius: 12,
+  backgroundColor: '#e8eef7',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginRight: 12,
+},
+
+  resumoEmoji: {
+  fontSize: 21,
+},
+
+  resumoNumero: {
+  fontSize: 20,
+  fontWeight: '800',
+  color: '#1f2937',
+},
+
+  resumoTexto: {
+  fontSize: 13,
+  color: '#6b7280',
+  marginTop: 1,
+},
+  linha: {
+  height: 1,
+  backgroundColor: '#eef0f2',
+  marginBottom: 15,
+},
+
+  datasContainer: {
+  flexDirection: 'row',
+  gap: 12,
+  marginBottom: 14,
+},
+
+  dataBox: {
+  flex: 1,
+  backgroundColor: '#f8fafc',
+  borderRadius: 12,
+  padding: 12,
+},
+
+  rotulo: {
+  fontSize: 12,
+  color: '#9ca3af',
+  marginBottom: 4,
+},
+
+  data: {
+  fontSize: 15,
+  fontWeight: '600',
+  color: '#374151',
+},
+  localizacao: {
+  backgroundColor: '#f8fafc',
+  borderRadius: 12,
+  padding: 14,
+  marginBottom: 2,
+},
+
+ cemiterio: {
+  fontSize: 15,
+  fontWeight: '600',
+  color: '#374151',
+  flex: 1,
+},
+
+  localContainer: {
+  flexDirection: 'row',
+  gap: 12,
+},
+
+  localBox: {
+  flex: 1,
+},
+
+  valorLocal: {
+  fontSize: 15,
+  fontWeight: '600',
+  color: '#374151',
+},
+  botaoMapaPressionado: {
+  opacity: 0.75,
+  transform: [{ scale: 0.98 }],
+},
+cemiterioContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 12,
+},
+
+iconeLocal: {
+  fontSize: 17,
+  marginRight: 7,
+},
+botaoVoltar: {
+  alignSelf: 'center',
+  backgroundColor: '#ffffff',
+  paddingVertical: 12,
+  paddingHorizontal: 25,
+  borderRadius: 12,
+  marginTop: 5,
+  marginBottom: 10,
+
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.06,
+  shadowRadius: 4,
+
+  elevation: 2,
+},
+
+botaoVoltarPressionado: {
+  opacity: 0.7,
+  transform: [{ scale: 0.97 }],
+},
+
+textoVoltar: {
+  fontSize: 15,
+  color: '#4a6fa5',
+  fontWeight: '700',
+},
 });

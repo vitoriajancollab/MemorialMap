@@ -11,19 +11,56 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Memorial Maps',
+          title: 'Memorial Map',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
+            <Ionicons
+              name={focused ? 'home-sharp' : 'home-outline'}
+              color={color}
+              size={24}
+            />
           ),
         }}
       />
+
       <Tabs.Screen
-        name="about"
+        name="pesquisa"
         options={{
-          title: 'About',
+          title: 'Pesquisa',
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24} />
+            <Ionicons
+              name={focused ? 'search' : 'search-outline'}
+              color={color}
+              size={24}
+            />
           ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="admin"
+        options={{
+          href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="cadastro"
+        options={{
+          href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="registros"
+        options={{
+          href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="boas-vindas"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
