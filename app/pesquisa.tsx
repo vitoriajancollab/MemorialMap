@@ -49,9 +49,16 @@ export default function Index() {
     const dados = await resposta.json();
 
 
-    const filtrados = dados.filter((item: any) =>
-      item.Nome.toLowerCase().includes(nome.toLowerCase())
-    );
+    const normalizarTexto = (texto: string) => {
+     return texto
+     .normalize('NFD')
+     .replace(/[\u0300-\u036f]/g, '')
+     .toLowerCase();
+};
+
+   const filtrados = dados.filter((item: any) =>
+   normalizarTexto(item.Nome).includes(normalizarTexto(nome))
+   );
 
 
     setResultado(filtrados);
@@ -108,9 +115,10 @@ export default function Index() {
                 🔎  Pesquisar
               </Text>
             </Pressable>
+            
+            
 
-
-            <Pressable
+             <Pressable
               style={styles.botaoAdmin}
               onPress={() => router.push('/admin')}
             >
@@ -191,17 +199,23 @@ export default function Index() {
       </View>
     </View>
 
-
-    <Pressable
-      style={styles.botaoMapa}
-      onPress={() => {
-        alert('Mapa será adicionado em breve! 🗺️');
-      }}
-    >
-      <Text style={styles.textoMapa}>
-        🗺️ Ver localização
-      </Text>
-    </Pressable>
+<Pressable
+  style={styles.botaoMapa}
+  onPress={() =>
+    router.push({
+      pathname: '/mapa',
+      params: {
+        latitude: item.Latitude.toString(),
+        longitude: item.Longitude.toString(),
+        nome: item.Nome,
+      },
+    })
+  }
+>
+  <Text style={styles.textoMapa}>
+    🗺️ Ver localização
+  </Text>
+</Pressable>
   </View>
 ))}
 

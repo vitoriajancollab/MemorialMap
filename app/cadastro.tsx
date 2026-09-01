@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { router } from 'expo-router';
 
 
 export default function Cadastro() {
@@ -152,7 +153,7 @@ async function salvarEdicao() {
     }
 
 
-    alert('Falecido atualizado com sucesso!');
+     alert('Falecido atualizado com sucesso!');
 
 
     setIdEditando(null);
@@ -182,18 +183,16 @@ async function salvarEdicao() {
 
        try {
    
-      function formatarData(data: string) {
-   if (!data) return null;
+       function formatarData(data: string) {
+       if (!data) return null;
 
 
-  const partes = data.split('/');
+   const partes = data.split('/');
 
 
-   if (partes.length === 3) {
+    if (partes.length === 3) {
     return `${partes[2]}-${partes[1]}-${partes[0]}`;
     }
-
-
     return data;
    }
     alert('Vou chamar a API agora!');
@@ -220,9 +219,6 @@ async function salvarEdicao() {
 
 
     console.log('RESPOSTA DA API:', resposta.status);
-
-
-
 
     const dados = await resposta.json();
 
@@ -340,15 +336,24 @@ async function salvarEdicao() {
      </Text>
      </Pressable>
 
+     <Pressable
+       style={styles.botaoVoltar}
+       onPress={() => router.push('/pesquisa')}
+       >
+       <Text style={styles.textoVoltar}>
+       ← Voltar para pesquisa
+       </Text>
+       </Pressable>
 
-    {mostrarRegistros && falecidos.map((falecido) => (
-    <View key={falecido.Id} style={styles.card}>
-    <Text style={styles.nomeFalecido}>
+
+     {mostrarRegistros && falecidos.map((falecido) => (
+     <View key={falecido.Id} style={styles.card}>
+     <Text style={styles.nomeFalecido}>
       {falecido.Nome}
-    </Text>
+     </Text>
 
 
-    <Text>
+     <Text>
       Cemitério: {falecido.Cemiterio || 'Não informado'}
     </Text>
 
@@ -361,34 +366,31 @@ async function salvarEdicao() {
      <Pressable
         style={styles.botaoEditar}
         onPress={() => editarFalecido(falecido)}
- >
-    <Text style={styles.textoBotao}>
-    ✏️ Editar
-    </Text>
-   </Pressable>
+        >
+       <Text style={styles.textoBotao}>
+         ✏️ Editar
+       </Text>
+       </Pressable>
 
-
-
-
-    <Pressable
-      style={styles.botaoExcluir}
-      onPress={() => excluirFalecido(falecido.Id)}
-    >
-      <Text style={styles.textoBotao}>
-        🗑️ Excluir
-      </Text>
+      <Pressable
+        style={styles.botaoExcluir}
+        onPress={() => excluirFalecido(falecido.Id)}
+       >
+        <Text
+         style={{
+        color: '#faf8f0',
+        fontSize: 16,
+        fontWeight: 'bold',
+       }}
+        >
+       🗑️ Excluir
+       </Text>
     </Pressable>
-  </View>
+  </View> 
  ))}
     </ScrollView>
    
-   
   );
-
-
-
-
- 
  
 }
 
@@ -400,14 +402,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
 
-
   titulo: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 25,
     textAlign: 'center',
   },
-
 
   input: {
     backgroundColor: '#fff',
@@ -428,14 +428,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-
   textoBotao: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
-
-
 
 
 card: {
@@ -455,16 +452,18 @@ nomeFalecido: {
 },
 
 
-botaoExcluir: {
+ botaoExcluir: {
   backgroundColor: '#c62828',
   padding: 12,
   borderRadius: 8,
   alignItems: 'center',
+  justifyContent: 'center',
   marginTop: 12,
+  width: '100%',
 },
 
 
-botaoEditar: {
+ botaoEditar: {
   backgroundColor: '#1565c0',
   padding: 12,
   borderRadius: 8,
@@ -472,12 +471,34 @@ botaoEditar: {
   marginTop: 12,
 },
 
-
-botaoVer: {
+ botaoVer: {
   backgroundColor: '#6a1b9a',
   padding: 15,
   borderRadius: 8,
   alignItems: 'center',
   marginTop: 15,
+},
+conteudoExcluir: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+emojiExcluir: {
+  fontSize: 16,
+  marginRight: 6,
+},
+
+ botaoVoltar: {
+  alignItems: 'center',
+  marginTop: 18,
+  marginBottom: 20,
+},
+
+
+ textoVoltar: {
+  color: '#4a6fa5',
+  fontSize: 16,
+  fontWeight: 'bold',
 },
 });
