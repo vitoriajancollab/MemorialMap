@@ -56,10 +56,13 @@ export default function Index() {
      .toLowerCase();
 };
 
-   const filtrados = dados.filter((item: any) =>
-   normalizarTexto(item.Nome).includes(normalizarTexto(nome))
-   );
+     const textoPesquisa = normalizarTexto(nome.trim());
 
+     const filtrados = dados.filter((item: any) => { 
+     const nomeRegistro = normalizarTexto(String(item.Nome || '').trim());
+
+     return nomeRegistro.includes(textoPesquisa);
+    });
 
     setResultado(filtrados);
   } catch (erro) {
@@ -204,11 +207,14 @@ export default function Index() {
   onPress={() =>
     router.push({
       pathname: '/mapa',
-      params: {
-        latitude: item.Latitude.toString(),
-        longitude: item.Longitude.toString(),
-        nome: item.Nome,
-      },
+     params: {
+             latitude: item.Latitude.toString(),
+             longitude: item.Longitude.toString(),
+             nome: item.Nome,
+             cemiterio: item.Cemiterio,
+             quadra: item.Quadra,
+             lote: item.Lote,
+             },
     })
   }
 >

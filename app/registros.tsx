@@ -33,12 +33,12 @@ export default function Registros() {
   }
 
 
-  useEffect(() => {
+    useEffect(() => {
     carregarFalecidos();
   }, []);
 
 
-  const registrosFiltrados = falecidos.filter((falecido) =>
+    const registrosFiltrados = falecidos.filter((falecido) =>
     falecido.Nome.toLowerCase().includes(pesquisa.toLowerCase())
   );
 
@@ -135,7 +135,7 @@ export default function Registros() {
 
 
             <View style={styles.linha} />
-<View style={styles.datasContainer}>
+            <View style={styles.datasContainer}>
 
 
   <View style={styles.dataBox}>
@@ -225,9 +225,19 @@ export default function Registros() {
                   styles.botaoMapa,
                 pressed && styles.botaoMapaPressionado,
                 ]}
-               onPress={() =>
-                alert('Em breve: localização no mapa')
-              }
+              onPress={() =>
+              router.push({
+              pathname: '/mapa',
+              params: {
+              latitude: falecido.Latitude.toString(),
+              longitude: falecido.Longitude.toString(),
+              nome: falecido.Nome,
+              cemiterio: falecido.Cemiterio,
+              quadra: falecido.Quadra,
+              lote: falecido.Lote,
+            },
+            })
+           }
              >
               <View style={styles.conteudoBotao}>
               <Text style={styles.iconeBotao}>
