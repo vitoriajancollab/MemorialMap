@@ -1,5 +1,5 @@
 import { useLocalSearchParams, router } from 'expo-router';
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable,StyleSheet,Text,View, ScrollView,} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 
@@ -16,14 +16,19 @@ export default function Mapa() {
   const lat = Number(latitude);
   const lng = Number(longitude);
 
-  const voltar = () => {
-  router.back();
-};
-
-  const abrirGoogleMaps = () => {
-  const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  const procurarFloricultura = () => {
+  const url = `https://www.google.com/maps/search/floricultura/@${lat},${lng},15z`;
   Linking.openURL(url);
 };
+
+  const voltar = () => {
+    router.back();
+  };
+
+  const abrirGoogleMaps = () => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    Linking.openURL(url);
+  };
 
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
     return (
@@ -41,7 +46,7 @@ export default function Mapa() {
     <View style={styles.container}>
 
       <Pressable style={styles.botaoVoltar} onPress={voltar}>
-      <Text style={styles.textoVoltar}>← Voltar</Text>
+        <Text style={styles.textoVoltar}>← Voltar</Text>
       </Pressable>
 
       <Text style={styles.titulo}>
@@ -58,41 +63,75 @@ export default function Mapa() {
         }}
       >
         <Marker
-           coordinate={{
-           latitude: lat,
-           longitude: lng,
-         }}
-            title={`📍 ${nome?.toString() || 'Localização'}`}   description={
-           `🏛️ ${cemiterio || '-'} | 📍 Quadra ${quadra || '-'} | 🔢 Lote ${lote || '-'}`
-         }
+          coordinate={{
+            latitude: lat,
+            longitude: lng,
+          }}
+
+        
+          title={`📍 ${nome?.toString() || 'Localização'}`}
+          description={
+            `🏛️ ${cemiterio || '-'} | 📍 Quadra ${quadra || '-'} | 🔢 Lote ${lote || '-'}`
+          }
           pinColor="#243b53"
         />
       </MapView>
 
       <View style={styles.informacoes}>
 
-        <Text style={styles.tituloInformacoes}>
-        📋 Detalhes da sepultura
-       </Text>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.conteudoInformacoes}
+        >
 
-        <Text style={styles.nome}>
-          👤 {nome?.toString() || 'Pessoa'}
-        </Text>
+          <Text style={styles.tituloInformacoes}>
+            📋 Detalhes da sepultura
+          </Text>
 
-        <Text style={styles.info}>
-          🏛️ Cemitério: {cemiterio?.toString() || '-'}
-        </Text>
+          <Text style={styles.nome}>
+            👤 {nome?.toString() || 'Pessoa'}
+          </Text>
 
-        <Text style={styles.info}>
-          📍 Quadra: {quadra?.toString() || '-'}
-        </Text>
+          <Text style={styles.info}>
+            🏛️ Cemitério: {cemiterio?.toString() || '-'}
+          </Text>
 
-        <Text style={styles.info}>
-          🔢 Lote: {lote?.toString() || '-'}
-        </Text>
-       <Pressable style={styles.botao} onPress={abrirGoogleMaps}>
-       <Text style={styles.textoBotao}>🚶 Como chegar</Text>
-       </Pressable>
+          <Text style={styles.info}>
+            📍 Quadra: {quadra?.toString() || '-'}
+          </Text>
+
+          <Text style={styles.info}>
+            🔢 Lote: {lote?.toString() || '-'}
+          </Text>
+
+          <Pressable
+            style={styles.botao}
+            onPress={abrirGoogleMaps}
+          >
+            <Text style={styles.textoBotao}>
+              🚶 Como chegar
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.botaoFloricultura}
+              onPress={() =>
+              router.push({
+              pathname: '/floricultura',
+              params: {
+              latitude: lat.toString(),
+              longitude: lng.toString(),
+              },
+             })
+              }
+              >
+          <Text style={styles.textoFloricultura}>
+           🌷 Floricultura
+          </Text>
+         </Pressable>
+
+        </ScrollView>
+
       </View>
 
     </View>
@@ -111,29 +150,34 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 
- mapa: {
-  flex: 1,
-  minHeight: 0,
-},
+  mapa: {
+    flex: 1,
+    minHeight: 0,
+  },
 
- informacoes: {
-  backgroundColor: '#fff',
-  padding: 18,
-  paddingBottom: 80,
-  borderTopLeftRadius: 20,
-  borderTopRightRadius: 20,
-},
+  informacoes: {
+    backgroundColor: '#fff',
+    height: 300,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+
+  conteudoInformacoes: {
+    padding: 18,
+    paddingBottom: 30,
+  },
+
   nome: {
     fontSize: 19,
     fontWeight: 'bold',
     color: '#243b53',
-    marginBottom: 10,
+    marginBottom: 6,
   },
 
   info: {
     fontSize: 15,
     color: '#52606d',
-    marginBottom: 6,
+    marginBottom: 3,
   },
 
   erro: {
@@ -148,39 +192,57 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
   },
+
   botao: {
-  backgroundColor: '#243b53',
-  padding: 15,
-  borderRadius: 12,
-  alignItems: 'center',
-  marginTop: 12,
-},
+    backgroundColor: '#243b53',
+    padding: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 12,
+  },
 
-textoBotao: {
-  color: '#fff',
-  fontSize: 16,
-  fontWeight: 'bold',
-},
-botaoVoltar: {
-  backgroundColor: '#243b53',
-  paddingVertical: 10,
-  paddingHorizontal: 18,
-  borderRadius: 10,
-  alignSelf: 'flex-start',
-  marginLeft: 15,
-  marginTop: 5,
-},
+  textoBotao: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 
-textoVoltar: {
-  color: '#fff',
-  fontSize: 15,
-  fontWeight: 'bold',
-},
+  botaoVoltar: {
+    backgroundColor: '#243b53',
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    alignSelf: 'flex-start',
+    marginLeft: 15,
+    marginTop: 5,
+  },
 
-tituloInformacoes: {
-  fontSize: 16,
-  fontWeight: 'bold',
-  color: '#243b53',
-  marginBottom: 12,
-},
+  textoVoltar: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+
+  tituloInformacoes: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#243b53',
+    marginBottom: 12,
+  },
+
+  botaoFloricultura: {
+    backgroundColor: '#fff0f7',
+    borderWidth: 2,
+    borderColor: '#d96bb3',
+    padding: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  textoFloricultura: {
+    color: '#8b2f6b',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });

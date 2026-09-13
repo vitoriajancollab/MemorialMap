@@ -156,7 +156,7 @@ export default function Index() {
 )}
           {resultado.map((item: any) => (
   <View
-    key={item.Id.toString()}
+    key={String(item.Id ?? `${item.Nome}-${item.Lote}`)}
     style={styles.card}
   >
     <Text style={styles.resultado}>
@@ -208,8 +208,8 @@ export default function Index() {
     router.push({
       pathname: '/mapa',
      params: {
-             latitude: item.Latitude.toString(),
-             longitude: item.Longitude.toString(),
+             latitude: String(item.Latitude ?? ''),
+             longitude: String(item.Longitude ?? ''),
              nome: item.Nome,
              cemiterio: item.Cemiterio,
              quadra: item.Quadra,
