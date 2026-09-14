@@ -428,11 +428,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  textoBotao: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+ textoBotao: {
+  color: 'white',
+  fontSize: 22,
+  fontWeight: 'bold',
+  textAlign: 'center',
+},
 
   card: {
     backgroundColor: '#fff',
