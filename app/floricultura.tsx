@@ -69,7 +69,7 @@ export default function Floricultura() {
             Pequenas flores feitas à mão com muito carinho.
           </Text>
 
-          {/* Produto */}
+           {/* Produto */}
           <View style={styles.produto}>
 
             <Image
