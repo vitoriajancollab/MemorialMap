@@ -209,6 +209,16 @@ export default function Cadastro() {
         return data;
       }
 
+      const obj = new Object({
+        Nome: nome,
+        DataNascimento: formatarData(dataNascimento),
+        DataFalecimento: formatarData(dataFalecimento),
+        Cemiterio: cemiterio || null,
+        Quadra: quadra || null,
+        Lote: lote || null,
+        Latitude: latitude ? Number(latitude.replace(',', '.')) : null,
+        Longitude: longitude ? Number(longitude.replace(',', '.')) : null,
+      });
       const resposta = await fetch(
         'http://192.168.1.74:3000/falecidos',
         {
@@ -216,20 +226,7 @@ export default function Cadastro() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            Nome: nome,
-            DataNascimento: formatarData(dataNascimento),
-            DataFalecimento: formatarData(dataFalecimento),
-            Cemiterio: cemiterio || null,
-            Quadra: quadra || null,
-            Lote: lote || null,
-            Latitude: latitude
-              ? Number(latitude.replace(',', '.'))
-              : null,
-            Longitude: longitude
-              ? Number(longitude.replace(',', '.'))
-              : null,
-          }),
+          body: JSON.parse(JSON.stringify(obj)),
         }
       );
 
