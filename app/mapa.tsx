@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View, } from 'react-native';
+import { Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View, } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 
@@ -58,29 +58,38 @@ export default function Mapa() {
         🗺️ Localização
       </Text>
 
-      <MapView
-        style={styles.mapa}
-        initialRegion={{
-          latitude: lat,
-          longitude: lng,
-          latitudeDelta: 0.002,
-          longitudeDelta: 0.002,
-        }}
-      >
-        <Marker
-          coordinate={{
+      {Platform.OS === 'web' ? (
+        // react-native-maps não tem implementação real na web, então usamos um embed do Google Maps
+        <iframe
+          style={styles.mapa as any}
+          src={`https://www.google.com/maps?q=${lat},${lng}&z=17&output=embed`}
+          title="Mapa"
+        />
+      ) : (
+        <MapView
+          style={styles.mapa}
+          initialRegion={{
             latitude: lat,
             longitude: lng,
+            latitudeDelta: 0.002,
+            longitudeDelta: 0.002,
           }}
+        >
+          <Marker
+            coordinate={{
+              latitude: lat,
+              longitude: lng,
+            }}
 
-        
-          title={`📍 ${nome?.toString() || 'Localização'}`}
-          description={
-            `🏛️ ${cemiterio || '-'} | 📍 Quadra ${quadra || '-'} | 🔢 Lote ${lote || '-'}`
-          }
-          pinColor="#243b53"
-        />
-      </MapView>
+          
+            title={`📍 ${nome?.toString() || 'Localização'}`}
+            description={
+              `🏛️ ${cemiterio || '-'} | 📍 Quadra ${quadra || '-'} | 🔢 Lote ${lote || '-'}`
+            }
+            pinColor="#243b53"
+          />
+        </MapView>
+      )}
 
       <View style={styles.informacoes}>
 
