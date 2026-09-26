@@ -58,7 +58,7 @@ export default function Cadastro() {
   async function excluirFalecido(id: number) {
     try {
       const resposta = await fetch(
-        `https://api-5h1gebvfw-nexthor.vercel.app/falecidos/${id}`,
+        `https://api-hazel-nine-14.vercel.app/falecidos/${id}`,
         {
           method: 'DELETE',
         }
@@ -134,7 +134,7 @@ export default function Cadastro() {
 
     try {
       const resposta = await fetch(
-        `https://api-5h1gebvfw-nexthor.vercel.app/falecidos/${idEditando}`,
+        `https://api-hazel-nine-14.vercel.app/falecidos/${idEditando}`,
         {
           method: 'PUT',
           headers: {

@@ -24,7 +24,7 @@ export default function Registros() {
       const dados = await resposta.json();
 
 
-      setFalecidos(dados);
+      setFalecidos(Array.isArray(dados) ? dados : []);
     } catch (erro) {
       console.error('Erro ao carregar falecidos:', erro);
       alert('Não foi possível carregar os registros.');
@@ -37,8 +37,16 @@ export default function Registros() {
   }, []);
 
 
-    const registrosFiltrados = falecidos.filter((falecido) =>
-    falecido.Nome.toLowerCase().includes(pesquisa.toLowerCase())
+  const normalizarTexto = (texto: string) =>
+    texto
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+
+  const registrosFiltrados = falecidos.filter((falecido) =>
+    normalizarTexto(String(falecido.Nome || '')).includes(
+      normalizarTexto(pesquisa)
+    )
   );
 
 
@@ -144,9 +152,9 @@ export default function Registros() {
 
 
     <Text style={styles.data}>
-      {new Date(
-        falecido.DataNascimento
-      ).toLocaleDateString('pt-BR')}
+      {falecido.DataNascimento
+        ? new Date(falecido.DataNascimento).toLocaleDateString('pt-BR')
+        : 'Não informado'}
     </Text>
   </View>
 
@@ -158,9 +166,9 @@ export default function Registros() {
 
 
     <Text style={styles.data}>
-      {new Date(
-        falecido.DataFalecimento
-      ).toLocaleDateString('pt-BR')}
+      {falecido.DataFalecimento
+        ? new Date(falecido.DataFalecimento).toLocaleDateString('pt-BR')
+        : 'Não informado'}
     </Text>
   </View>
 
