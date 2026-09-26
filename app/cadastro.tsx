@@ -131,16 +131,21 @@ export default function Cadastro() {
     setDataFalecimento(formatarData(campo(falecido, 'DataFalecimento')));
   }
 
+  // A API grava a data como string; se enviarmos em formato ISO ela vira timestamp, então mantemos dd/mm/yyyy
   function converterDataParaAPI(data: string) {
     if (!data) return null;
 
-    const partes = data.split('/');
+    const partes = data.trim().split(/[\/-]/);
 
     if (partes.length === 3) {
-      return `${partes[2]}-${partes[1]}-${partes[0]}`;
+      const [dia, mes, ano] = partes;
+
+      if (dia && mes && ano && ano.length === 4) {
+        return `${dia.padStart(2, '0')}/${mes.padStart(2, '0')}/${ano}`;
+      }
     }
 
-    return data;
+    return null;
   }
 
   async function salvarEdicao() {
@@ -212,22 +217,10 @@ export default function Cadastro() {
     console.log('INICIOU O CADASTRO');
 
     try {
-      function formatarData(data: string) {
-        if (!data) return null;
-
-        const partes = data.split('/');
-
-        if (partes.length === 3) {
-          return `${partes[2]}-${partes[1]}-${partes[0]}`;
-        }
-
-        return data;
-      }
-
       const obj = new Object({
         Nome: nome,
-        DataNascimento: formatarData(dataNascimento),
-        DataFalecimento: formatarData(dataFalecimento),
+        DataNascimento: converterDataParaAPI(dataNascimento),
+        DataFalecimento: converterDataParaAPI(dataFalecimento),
         Cemiterio: cemiterio || null,
         Quadra: quadra || null,
         Lote: lote || null,
