@@ -22,6 +22,21 @@ export default function Cadastro() {
   const [idEditando, setIdEditando] = useState<number | null>(null);
   const [mostrarRegistros, setMostrarRegistros] = useState(false);
   const [mostrarSucesso, setMostrarSucesso] = useState(false);
+  const [mostrarAviso, setMostrarAviso] = useState(false);
+  const [tituloAviso, setTituloAviso] = useState('');
+  const [mensagemAviso, setMensagemAviso] = useState('');
+  const [iconeAviso, setIconeAviso] = useState('🔔');
+
+  function mostrarMensagem(
+  titulo: string,
+  mensagem: string,
+  icone: string = '🔔'
+) {
+  setTituloAviso(titulo);
+  setMensagemAviso(mensagem);
+  setIconeAviso(icone);
+  setMostrarAviso(true);
+}
 
   async function carregarFalecidos() {
     try {
@@ -53,22 +68,37 @@ export default function Cadastro() {
       const dados = await resposta.json();
 
       if (!resposta.ok) {
-        alert(dados.erro || 'Erro ao excluir falecido.');
+       mostrarMensagem(
+         'Atenção',
+        dados.erro || 'Erro ao excluir falecido.',
+        '⚠️'
+        );
         return;
       }
 
-      alert('Falecido excluído com sucesso!');
+      mostrarMensagem(
+       'Sucesso!',
+       'Falecido excluído com sucesso.',
+       '✅'
+      );
 
       carregarFalecidos();
     } catch (erro) {
       console.error(erro);
-      alert('Não foi possível conectar com a API.');
+      mostrarMensagem(
+     'Erro de conexão',
+     'Não foi possível conectar com a API.',
+     '⚠️'
+     );
     }
   }
 
   function editarFalecido(falecido: any) {
-    alert(`Editando: ${falecido.Nome}`);
-
+    mostrarMensagem(
+  'Editando registro',
+  `Você está editando o registro de ${falecido.Nome}.`,
+  '✏️'
+   );
     setIdEditando(falecido.Id);
     setNome(falecido.Nome);
     setCemiterio(falecido.Cemiterio);
@@ -131,7 +161,11 @@ export default function Cadastro() {
       const dados = await resposta.json();
 
       if (!resposta.ok) {
-        alert(dados.erro || 'Erro ao editar falecido.');
+       mostrarMensagem(
+  'Atenção',
+  dados.erro || 'Erro ao editar falecido.',
+  '⚠️'
+);
         return;
       }
 
@@ -151,7 +185,11 @@ export default function Cadastro() {
       carregarFalecidos();
     } catch (erro) {
       console.error(erro);
-      alert('Não foi possível conectar com a API.');
+      mostrarMensagem(
+  'Erro de conexão',
+  'Não foi possível conectar com a API.',
+  '⚠️'
+);
     }
   }
 
@@ -197,8 +235,11 @@ export default function Cadastro() {
       const dados = await resposta.json();
 
       if (!resposta.ok) {
-        alert(dados.erro || 'Erro ao cadastrar falecido.');
-        return;
+mostrarMensagem(
+  'Atenção',
+  dados.erro || 'Erro ao cadastrar falecido.',
+  '⚠️'
+);        return;
       }
 
       // Mostra a confirmação profissional
@@ -216,8 +257,11 @@ export default function Cadastro() {
       carregarFalecidos();
     } catch (erro) {
       console.error(erro);
-      alert('Não foi possível conectar com a API.');
-    }
+mostrarMensagem(
+  'Erro de conexão',
+  'Não foi possível conectar com a API.',
+  '⚠️'
+);    }
   }
 
   return (
@@ -294,30 +338,32 @@ export default function Cadastro() {
       </Pressable>
 
       {/* CONFIRMAÇÃO DE SUCESSO */}
-      {mostrarSucesso && (
-        <View style={styles.caixaSucesso}>
-          <Text style={styles.iconeSucesso}>
-            ✅
-          </Text>
+     {mostrarAviso && (
+  <View style={styles.caixaAviso}>
 
-          <Text style={styles.tituloSucesso}>
-            Cadastro realizado!
-          </Text>
+    <Text style={styles.iconeAviso}>
+      {iconeAviso}
+    </Text>
 
-          <Text style={styles.textoSucesso}>
-            O falecido foi cadastrado com sucesso no Memorial Map.
-          </Text>
+    <Text style={styles.tituloAviso}>
+      {tituloAviso}
+    </Text>
 
-          <Pressable
-            style={styles.botaoSucesso}
-            onPress={() => setMostrarSucesso(false)}
-          >
-            <Text style={styles.textoBotaoSucesso}>
-              Continuar
-            </Text>
-          </Pressable>
-        </View>
-      )}
+    <Text style={styles.textoAviso}>
+      {mensagemAviso}
+    </Text>
+
+    <Pressable
+      style={styles.botaoAviso}
+      onPress={() => setMostrarAviso(false)}
+    >
+      <Text style={styles.textoBotaoAviso}>
+        OK
+      </Text>
+    </Pressable>
+
+  </View>
+)}
 
       <Pressable
         style={styles.botaoVer}
@@ -425,11 +471,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  textoBotao: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+ textoBotao: {
+  color: 'white',
+  fontSize: 22,
+  fontWeight: 'bold',
+  textAlign: 'center',
+},
 
   card: {
     backgroundColor: '#fff',
@@ -526,4 +573,49 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
   },
+
+caixaAviso: {
+  width: '100%',
+  backgroundColor: '#ffffff',
+  padding: 20,
+  borderRadius: 16,
+  marginTop: 18,
+  alignItems: 'center',
+  borderWidth: 1,
+  borderColor: '#d6e0ea',
+},
+
+iconeAviso: {
+  fontSize: 38,
+  marginBottom: 8,
+},
+
+tituloAviso: {
+  fontSize: 20,
+  fontWeight: 'bold',
+  color: '#243b53',
+  marginBottom: 6,
+  textAlign: 'center',
+},
+
+textoAviso: {
+  fontSize: 15,
+  color: '#52606d',
+  textAlign: 'center',
+  marginBottom: 15,
+},
+
+botaoAviso: {
+  backgroundColor: '#243b53',
+  paddingVertical: 11,
+  paddingHorizontal: 35,
+  borderRadius: 10,
+},
+
+textoBotaoAviso: {
+  color: '#fff',
+  fontSize: 15,
+  fontWeight: 'bold',
+},
+
 });
