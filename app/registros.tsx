@@ -50,7 +50,7 @@ export default function Registros() {
     return registro[chave] ?? registro[chaveMinuscula];
   }
 
-  // A API já envia a data como dd/mm/yyyy; new Date() não entende esse formato
+  // A API pode gravar a data como dd/mm/yyyy ou como timestamp em milissegundos (ex: "957484800000.0")
   function formatarData(data: any) {
     if (!data) return 'Não informado';
 
@@ -58,7 +58,9 @@ export default function Registros() {
 
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) return texto;
 
-    const dataObj = new Date(texto);
+    const dataObj = /^\d+(\.\d+)?$/.test(texto)
+      ? new Date(Number(texto))
+      : new Date(texto);
 
     return isNaN(dataObj.getTime())
       ? 'Não informado'
