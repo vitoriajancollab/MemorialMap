@@ -235,7 +235,7 @@ export default function Cadastro() {
         Longitude: longitude ? Number(longitude.replace(',', '.')) : null,
       });
       const resposta = await fetch(
-        'https://api-5h1gebvfw-nexthor.vercel.app/falecidos',
+        'https://api-hazel-nine-14.vercel.app/falecidos',
         {
           method: 'POST',
           headers: {
