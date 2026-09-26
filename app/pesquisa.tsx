@@ -42,7 +42,7 @@ export default function Index() {
 
 
     const resposta = await fetch(
-      'http://192.168.1.74:3000/falecidos'
+      'http://api-5h1gebvfw-nexthor.vercel.app/falecidos'
     );
 
 

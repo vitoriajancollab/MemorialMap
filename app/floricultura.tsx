@@ -1,7 +1,7 @@
-import { router,useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import {
-  Linking,
   Image,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,

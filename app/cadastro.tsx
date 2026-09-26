@@ -26,7 +26,7 @@ export default function Cadastro() {
   async function carregarFalecidos() {
     try {
       const resposta = await fetch(
-        'http://192.168.1.74:3000/falecidos'
+        'http://api-5h1gebvfw-nexthor.vercel.app/falecidos'
       );
 
       const dados = await resposta.json();
@@ -44,7 +44,7 @@ export default function Cadastro() {
   async function excluirFalecido(id: number) {
     try {
       const resposta = await fetch(
-        `http://192.168.1.74:3000/falecidos/${id}`,
+        `http://api-5h1gebvfw-nexthor.vercel.app/falecidos/${id}`,
         {
           method: 'DELETE',
         }
@@ -105,7 +105,7 @@ export default function Cadastro() {
 
     try {
       const resposta = await fetch(
-        `http://192.168.1.74:3000/falecidos/${idEditando}`,
+        `http://api-5h1gebvfw-nexthor.vercel.app/falecidos/${idEditando}`,
         {
           method: 'PUT',
           headers: {
@@ -182,7 +182,7 @@ export default function Cadastro() {
         Longitude: longitude ? Number(longitude.replace(',', '.')) : null,
       });
       const resposta = await fetch(
-        'http://192.168.1.74:3000/falecidos',
+        'http://api-5h1gebvfw-nexthor.vercel.app/falecidos',
         {
           method: 'POST',
           headers: {
