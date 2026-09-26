@@ -56,7 +56,7 @@ export default function Index() {
 
 
     const resposta = await fetch(
-      'http://api-5h1gebvfw-nexthor.vercel.app/falecidos'
+      'https://api-5h1gebvfw-nexthor.vercel.app/falecidos'
     );
 
 
