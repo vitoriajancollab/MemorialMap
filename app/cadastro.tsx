@@ -241,7 +241,7 @@ export default function Cadastro() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.parse(JSON.stringify(obj)),
+          body: JSON.stringify(obj),
         }
       );
 
