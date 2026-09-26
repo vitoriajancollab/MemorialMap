@@ -1,9 +1,8 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View, } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
 
-
-export default function Mapa() {
+// react-native-maps não tem implementação real na web, então esta tela usa um embed do Google Maps
+export default function MapaWeb() {
   const {
     latitude,
     longitude,
@@ -20,11 +19,6 @@ export default function Mapa() {
 
   const lat = paraNumero(latitude);
   const lng = paraNumero(longitude);
-
-  const procurarFloricultura = () => {
-  const url = `https://www.google.com/maps/search/floricultura/@${lat},${lng},15z`;
-  Linking.openURL(url);
-};
 
   const voltar = () => {
     router.back();
@@ -58,29 +52,11 @@ export default function Mapa() {
         🗺️ Localização
       </Text>
 
-      <MapView
-        style={styles.mapa}
-        initialRegion={{
-          latitude: lat,
-          longitude: lng,
-          latitudeDelta: 0.002,
-          longitudeDelta: 0.002,
-        }}
-      >
-        <Marker
-          coordinate={{
-            latitude: lat,
-            longitude: lng,
-          }}
-
-        
-          title={`📍 ${nome?.toString() || 'Localização'}`}
-          description={
-            `🏛️ ${cemiterio || '-'} | 📍 Quadra ${quadra || '-'} | 🔢 Lote ${lote || '-'}`
-          }
-          pinColor="#243b53"
-        />
-      </MapView>
+      <iframe
+        style={styles.mapa as any}
+        src={`https://www.google.com/maps?q=${lat},${lng}&z=17&output=embed`}
+        title="Mapa"
+      />
 
       <View style={styles.informacoes}>
 
@@ -158,6 +134,7 @@ const styles = StyleSheet.create({
   mapa: {
     flex: 1,
     minHeight: 0,
+    borderWidth: 0,
   },
 
   informacoes: {
