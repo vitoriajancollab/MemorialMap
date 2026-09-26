@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { API_URL } from '../constants/Api';
 
 export default function Index() {
   const [nome, setNome] = useState('');
@@ -55,9 +56,7 @@ export default function Index() {
     setPesquisou(true);
 
 
-    const resposta = await fetch(
-      'https://api-5h1gebvfw-nexthor.vercel.app/falecidos'
-    );
+    const resposta = await fetch(`${API_URL}/falecidos`);
 
 
       const dados = await resposta.json();

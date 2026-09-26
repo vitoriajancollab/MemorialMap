@@ -8,6 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { API_URL } from '../constants/Api';
 
 export default function Cadastro() {
   const [nome, setNome] = useState('');
@@ -40,9 +41,7 @@ export default function Cadastro() {
 
   async function carregarFalecidos() {
     try {
-      const resposta = await fetch(
-        'https://api-5h1gebvfw-nexthor.vercel.app/falecidos'
-      );
+      const resposta = await fetch(`${API_URL}/falecidos`);
 
       const dados = await resposta.json();
 
