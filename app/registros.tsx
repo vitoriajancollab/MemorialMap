@@ -43,8 +43,30 @@ export default function Registros() {
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase();
 
+  // A API retorna registros com casos mistos (Nome/nome, Id/id...), então lemos os dois formatos
+  function campo(registro: any, chave: string) {
+    if (!registro) return undefined;
+    const chaveMinuscula = chave.charAt(0).toLowerCase() + chave.slice(1);
+    return registro[chave] ?? registro[chaveMinuscula];
+  }
+
+  // A API já envia a data como dd/mm/yyyy; new Date() não entende esse formato
+  function formatarData(data: any) {
+    if (!data) return 'Não informado';
+
+    const texto = String(data).trim();
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) return texto;
+
+    const dataObj = new Date(texto);
+
+    return isNaN(dataObj.getTime())
+      ? 'Não informado'
+      : dataObj.toLocaleDateString('pt-BR');
+  }
+
   const registrosFiltrados = falecidos.filter((falecido) =>
-    normalizarTexto(String(falecido.Nome || '')).includes(
+    normalizarTexto(String(campo(falecido, 'Nome') || '')).includes(
       normalizarTexto(pesquisa)
     )
   );
@@ -110,7 +132,7 @@ export default function Registros() {
 ) : (
         registrosFiltrados.map((falecido) => (
        <Pressable
-       key={falecido.Id}
+       key={campo(falecido, 'Id')}
        style={({ pressed }) => [
        styles.card,
        pressed && styles.cardPressionado,
@@ -128,12 +150,12 @@ export default function Registros() {
 
        <View style={styles.nomeContainer}>
         <Text style={styles.nome}>
-        {falecido.Nome}
+        {campo(falecido, 'Nome')}
         </Text>
 
 
       <Text style={styles.identificador}>
-        Registro #{falecido.Id}
+        Registro #{campo(falecido, 'Id')}
       </Text>
     </View>
 
@@ -152,9 +174,7 @@ export default function Registros() {
 
 
     <Text style={styles.data}>
-      {falecido.DataNascimento
-        ? new Date(falecido.DataNascimento).toLocaleDateString('pt-BR')
-        : 'Não informado'}
+      {formatarData(campo(falecido, 'DataNascimento'))}
     </Text>
   </View>
 
@@ -166,9 +186,7 @@ export default function Registros() {
 
 
     <Text style={styles.data}>
-      {falecido.DataFalecimento
-        ? new Date(falecido.DataFalecimento).toLocaleDateString('pt-BR')
-        : 'Não informado'}
+      {formatarData(campo(falecido, 'DataFalecimento'))}
     </Text>
   </View>
 
@@ -189,7 +207,7 @@ export default function Registros() {
 
 
   <Text style={styles.cemiterio}>
-    {falecido.Cemiterio || 'Não informado'}
+    {campo(falecido, 'Cemiterio') || 'Não informado'}
   </Text>
 </View>
 
@@ -204,7 +222,7 @@ export default function Registros() {
 
 
       <Text style={styles.valorLocal}>
-        {falecido.Quadra || 'Não informado'}
+        {campo(falecido, 'Quadra') || 'Não informado'}
       </Text>
     </View>
 
@@ -216,7 +234,7 @@ export default function Registros() {
 
 
       <Text style={styles.valorLocal}>
-        {falecido.Lote || 'Não informado'}
+        {campo(falecido, 'Lote') || 'Não informado'}
       </Text>
     </View>
 
@@ -236,12 +254,12 @@ export default function Registros() {
               router.push({
               pathname: '/mapa',
               params: {
-              latitude: falecido.Latitude.toString(),
-              longitude: falecido.Longitude.toString(),
-              nome: falecido.Nome,
-              cemiterio: falecido.Cemiterio,
-              quadra: falecido.Quadra,
-              lote: falecido.Lote,
+              latitude: String(campo(falecido, 'Latitude') ?? ''),
+              longitude: String(campo(falecido, 'Longitude') ?? ''),
+              nome: campo(falecido, 'Nome'),
+              cemiterio: campo(falecido, 'Cemiterio'),
+              quadra: campo(falecido, 'Quadra'),
+              lote: campo(falecido, 'Lote'),
             },
             })
            }

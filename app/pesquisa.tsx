@@ -36,9 +36,21 @@ export default function Index() {
   function formatarData(data: string) {
     if (!data) return '-';
 
-    const dataObj = new Date(data);
+    const texto = String(data).trim();
 
-    return dataObj.toLocaleDateString('pt-BR');
+    // A API já envia a data como dd/mm/yyyy; new Date() não entende esse formato
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) return texto;
+
+    const dataObj = new Date(texto);
+
+    return isNaN(dataObj.getTime()) ? '-' : dataObj.toLocaleDateString('pt-BR');
+  }
+
+  // A API retorna registros com casos mistos (Nome/nome, Id/id...), então lemos os dois formatos
+  function campo(registro: any, chave: string) {
+    if (!registro) return undefined;
+    const chaveMinuscula = chave.charAt(0).toLowerCase() + chave.slice(1);
+    return registro[chave] ?? registro[chaveMinuscula];
   }
 
   async function pesquisar() {
@@ -72,7 +84,7 @@ export default function Index() {
 
       const filtrados = dados.filter((item: any) => {
         const nomeRegistro = normalizarTexto(
-          String(item.Nome || '').trim()
+          String(campo(item, 'Nome') || '').trim()
         );
 
         return nomeRegistro.includes(textoPesquisa);
@@ -193,22 +205,22 @@ export default function Index() {
           {resultado.map((item: any) => (
             <View
               key={String(
-                item.Id ?? `${item.Nome}-${item.Lote}`
+                campo(item, 'Id') ?? `${campo(item, 'Nome')}-${campo(item, 'Lote')}`
               )}
               style={styles.card}
             >
               <Text style={styles.resultado}>
-                👤 {item.Nome}
+                👤 {campo(item, 'Nome')}
               </Text>
 
               <View style={styles.linha} />
 
               <Text style={styles.info}>
-                🏛️ {item.Cemiterio}
+                🏛️ {campo(item, 'Cemiterio')}
               </Text>
 
               <Text style={styles.info}>
-                📍 Quadra {item.Quadra} • Lote {item.Lote}
+                📍 Quadra {campo(item, 'Quadra')} • Lote {campo(item, 'Lote')}
               </Text>
 
               <View style={styles.datas}>
@@ -218,7 +230,7 @@ export default function Index() {
                   </Text>
 
                   <Text style={styles.dataValor}>
-                    {formatarData(item.DataNascimento)}
+                    {formatarData(campo(item, 'DataNascimento'))}
                   </Text>
                 </View>
 
@@ -228,7 +240,7 @@ export default function Index() {
                   </Text>
 
                   <Text style={styles.dataValor}>
-                    {formatarData(item.DataFalecimento)}
+                    {formatarData(campo(item, 'DataFalecimento'))}
                   </Text>
                 </View>
               </View>
@@ -240,15 +252,15 @@ export default function Index() {
                     pathname: '/mapa',
                     params: {
                       latitude: String(
-                        item.Latitude ?? ''
+                        campo(item, 'Latitude') ?? ''
                       ),
                       longitude: String(
-                        item.Longitude ?? ''
+                        campo(item, 'Longitude') ?? ''
                       ),
-                      nome: item.Nome,
-                      cemiterio: item.Cemiterio,
-                      quadra: item.Quadra,
-                      lote: item.Lote,
+                      nome: campo(item, 'Nome'),
+                      cemiterio: campo(item, 'Cemiterio'),
+                      quadra: campo(item, 'Quadra'),
+                      lote: campo(item, 'Lote'),
                     },
                   })
                 }

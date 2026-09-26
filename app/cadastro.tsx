@@ -55,6 +55,26 @@ export default function Cadastro() {
     carregarFalecidos();
   }, []);
 
+  // A API retorna registros com casos mistos (Nome/nome, Id/id...), então lemos os dois formatos
+  function campo(registro: any, chave: string) {
+    if (!registro) return undefined;
+    const chaveMinuscula = chave.charAt(0).toLowerCase() + chave.slice(1);
+    return registro[chave] ?? registro[chaveMinuscula];
+  }
+
+  // A API já envia a data como dd/mm/yyyy; new Date() não entende esse formato
+  function formatarData(data: any) {
+    if (!data) return '';
+
+    const texto = String(data).trim();
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) return texto;
+
+    const dataObj = new Date(texto);
+
+    return isNaN(dataObj.getTime()) ? '' : dataObj.toLocaleDateString('pt-BR');
+  }
+
   async function excluirFalecido(id: number) {
     try {
       const resposta = await fetch(
@@ -95,24 +115,20 @@ export default function Cadastro() {
   function editarFalecido(falecido: any) {
     mostrarMensagem(
   'Editando registro',
-  `Você está editando o registro de ${falecido.Nome}.`,
+  `Você está editando o registro de ${campo(falecido, 'Nome')}.`,
   '✏️'
    );
-    setIdEditando(falecido.Id);
-    setNome(falecido.Nome);
-    setCemiterio(falecido.Cemiterio);
-    setQuadra(falecido.Quadra);
-    setLote(falecido.Lote);
-    setLatitude(String(falecido.Latitude ?? ''));
-    setLongitude(String(falecido.Longitude ?? ''));
+    setIdEditando(campo(falecido, 'Id'));
+    setNome(campo(falecido, 'Nome'));
+    setCemiterio(campo(falecido, 'Cemiterio'));
+    setQuadra(campo(falecido, 'Quadra'));
+    setLote(campo(falecido, 'Lote'));
+    setLatitude(String(campo(falecido, 'Latitude') ?? ''));
+    setLongitude(String(campo(falecido, 'Longitude') ?? ''));
 
-    setDataNascimento(
-      new Date(falecido.DataNascimento).toLocaleDateString('pt-BR')
-    );
+    setDataNascimento(formatarData(campo(falecido, 'DataNascimento')));
 
-    setDataFalecimento(
-      new Date(falecido.DataFalecimento).toLocaleDateString('pt-BR')
-    );
+    setDataFalecimento(formatarData(campo(falecido, 'DataFalecimento')));
   }
 
   function converterDataParaAPI(data: string) {
@@ -389,25 +405,25 @@ mostrarMensagem(
       {mostrarRegistros &&
         falecidos.map((falecido) => (
           <View
-            key={falecido.Id}
+            key={campo(falecido, 'Id')}
             style={styles.card}
           >
             <Text style={styles.nomeFalecido}>
-              {falecido.Nome}
+              {campo(falecido, 'Nome')}
             </Text>
 
             <Text>
               Cemitério:{' '}
-              {falecido.Cemiterio ||
+              {campo(falecido, 'Cemiterio') ||
                 'Não informado'}
             </Text>
 
             <Text>
               Quadra:{' '}
-              {falecido.Quadra ||
+              {campo(falecido, 'Quadra') ||
                 'Não informado'}{' '}
               | Lote:{' '}
-              {falecido.Lote ||
+              {campo(falecido, 'Lote') ||
                 'Não informado'}
             </Text>
 
@@ -425,7 +441,7 @@ mostrarMensagem(
             <Pressable
               style={styles.botaoExcluir}
               onPress={() =>
-                excluirFalecido(falecido.Id)
+                excluirFalecido(campo(falecido, 'Id'))
               }
             >
               <Text style={styles.textoBotao}>
