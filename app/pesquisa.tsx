@@ -1,17 +1,11 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
-import {
-  ImageBackground,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { useEffect,useState } from 'react';
+import {ImageBackground,Pressable,ScrollView,StyleSheet,Text,TextInput,View,} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
   const [nome, setNome] = useState('');
+  const [nomeUsuario, setNomeUsuario] = useState('');
   const [resultado, setResultado] = useState<any[]>([]);
   const [carregando, setCarregando] = useState(false);
   const [pesquisou, setPesquisou] = useState(false);
@@ -20,6 +14,18 @@ export default function Index() {
   const [tituloAviso, setTituloAviso] = useState('');
   const [mensagemAviso, setMensagemAviso] = useState('');
   const [iconeAviso, setIconeAviso] = useState('🔔');
+
+   useEffect(() => {
+   async function carregarUsuario() {
+    const nomeSalvo = await AsyncStorage.getItem('nomeUsuario');
+
+    if (nomeSalvo) {
+      setNomeUsuario(nomeSalvo);
+    }
+  }
+
+  carregarUsuario();
+}, []);
 
   function mostrarMensagem(
     titulo: string,
@@ -102,15 +108,22 @@ export default function Index() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.container}>
+
           {/* Área de pesquisa */}
           <View style={styles.caixaPesquisa}>
-            <Text style={styles.titulo}>
-              Encontre uma pessoa
-            </Text>
+          {nomeUsuario ? (
+               <Text style={styles.titulo}>
+               Olá, {nomeUsuario}! 👋
+               </Text>
+             ) : (
+               <Text style={styles.titulo}>
+                 Encontre uma pessoa
+               </Text>
+              )}
 
-            <Text style={styles.subtitulo}>
+             <Text style={styles.subtitulo}>
               Pesquise pelo nome para localizar uma pessoa
-            </Text>
+             </Text>
 
             <TextInput
               style={styles.input}
