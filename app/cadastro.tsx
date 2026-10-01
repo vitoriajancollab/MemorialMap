@@ -8,6 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { API_URL } from '../constants/Api';
 
 export default function Cadastro() {
   const [nome, setNome] = useState('');
@@ -40,9 +41,7 @@ export default function Cadastro() {
 
   async function carregarFalecidos() {
     try {
-      const resposta = await fetch(
-        'http://192.168.1.74:3000/falecidos'
-      );
+      const resposta = await fetch(`${API_URL}/falecidos`);
 
       const dados = await resposta.json();
 
@@ -56,10 +55,32 @@ export default function Cadastro() {
     carregarFalecidos();
   }, []);
 
+  // A API retorna registros com casos mistos (Nome/nome, Id/id...), então lemos os dois formatos
+  function campo(registro: any, chave: string) {
+    if (!registro) return undefined;
+    const chaveMinuscula = chave.charAt(0).toLowerCase() + chave.slice(1);
+    return registro[chave] ?? registro[chaveMinuscula];
+  }
+
+  // A API pode gravar a data como dd/mm/yyyy ou como timestamp em milissegundos (ex: "957484800000.0")
+  function formatarData(data: any) {
+    if (!data) return '';
+
+    const texto = String(data).trim();
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) return texto;
+
+    const dataObj = /^\d+(\.\d+)?$/.test(texto)
+      ? new Date(Number(texto))
+      : new Date(texto);
+
+    return isNaN(dataObj.getTime()) ? '' : dataObj.toLocaleDateString('pt-BR');
+  }
+
   async function excluirFalecido(id: number) {
     try {
       const resposta = await fetch(
-        `http://192.168.1.74:3000/falecidos/${id}`,
+        `https://api-hazel-nine-14.vercel.app/falecidos/${id}`,
         {
           method: 'DELETE',
         }
@@ -96,36 +117,37 @@ export default function Cadastro() {
   function editarFalecido(falecido: any) {
     mostrarMensagem(
   'Editando registro',
-  `Você está editando o registro de ${falecido.Nome}.`,
+  `Você está editando o registro de ${campo(falecido, 'Nome')}.`,
   '✏️'
    );
-    setIdEditando(falecido.Id);
-    setNome(falecido.Nome);
-    setCemiterio(falecido.Cemiterio);
-    setQuadra(falecido.Quadra);
-    setLote(falecido.Lote);
-    setLatitude(String(falecido.Latitude ?? ''));
-    setLongitude(String(falecido.Longitude ?? ''));
+    setIdEditando(campo(falecido, 'Id'));
+    setNome(campo(falecido, 'Nome'));
+    setCemiterio(campo(falecido, 'Cemiterio'));
+    setQuadra(campo(falecido, 'Quadra'));
+    setLote(campo(falecido, 'Lote'));
+    setLatitude(String(campo(falecido, 'Latitude') ?? ''));
+    setLongitude(String(campo(falecido, 'Longitude') ?? ''));
 
-    setDataNascimento(
-      new Date(falecido.DataNascimento).toLocaleDateString('pt-BR')
-    );
+    setDataNascimento(formatarData(campo(falecido, 'DataNascimento')));
 
-    setDataFalecimento(
-      new Date(falecido.DataFalecimento).toLocaleDateString('pt-BR')
-    );
+    setDataFalecimento(formatarData(campo(falecido, 'DataFalecimento')));
   }
 
+  // A API grava a data como string; se enviarmos em formato ISO ela vira timestamp, então mantemos dd/mm/yyyy
   function converterDataParaAPI(data: string) {
     if (!data) return null;
 
-    const partes = data.split('/');
+    const partes = data.trim().split(/[\/-]/);
 
     if (partes.length === 3) {
-      return `${partes[2]}-${partes[1]}-${partes[0]}`;
+      const [dia, mes, ano] = partes;
+
+      if (dia && mes && ano && ano.length === 4) {
+        return `${dia.padStart(2, '0')}/${mes.padStart(2, '0')}/${ano}`;
+      }
     }
 
-    return data;
+    return null;
   }
 
   async function salvarEdicao() {
@@ -135,7 +157,7 @@ export default function Cadastro() {
 
     try {
       const resposta = await fetch(
-        `http://192.168.1.74:3000/falecidos/${idEditando}`,
+        `https://api-hazel-nine-14.vercel.app/falecidos/${idEditando}`,
         {
           method: 'PUT',
           headers: {
@@ -197,22 +219,10 @@ export default function Cadastro() {
     console.log('INICIOU O CADASTRO');
 
     try {
-      function formatarData(data: string) {
-        if (!data) return null;
-
-        const partes = data.split('/');
-
-        if (partes.length === 3) {
-          return `${partes[2]}-${partes[1]}-${partes[0]}`;
-        }
-
-        return data;
-      }
-
       const obj = new Object({
         Nome: nome,
-        DataNascimento: formatarData(dataNascimento),
-        DataFalecimento: formatarData(dataFalecimento),
+        DataNascimento: converterDataParaAPI(dataNascimento),
+        DataFalecimento: converterDataParaAPI(dataFalecimento),
         Cemiterio: cemiterio || null,
         Quadra: quadra || null,
         Lote: lote || null,
@@ -220,13 +230,13 @@ export default function Cadastro() {
         Longitude: longitude ? Number(longitude.replace(',', '.')) : null,
       });
       const resposta = await fetch(
-        'http://192.168.1.74:3000/falecidos',
+        'https://api-hazel-nine-14.vercel.app/falecidos',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.parse(JSON.stringify(obj)),
+          body: JSON.stringify(obj),
         }
       );
 
@@ -390,25 +400,25 @@ mostrarMensagem(
       {mostrarRegistros &&
         falecidos.map((falecido) => (
           <View
-            key={falecido.Id}
+            key={campo(falecido, 'Id')}
             style={styles.card}
           >
             <Text style={styles.nomeFalecido}>
-              {falecido.Nome}
+              {campo(falecido, 'Nome')}
             </Text>
 
             <Text>
               Cemitério:{' '}
-              {falecido.Cemiterio ||
+              {campo(falecido, 'Cemiterio') ||
                 'Não informado'}
             </Text>
 
             <Text>
               Quadra:{' '}
-              {falecido.Quadra ||
+              {campo(falecido, 'Quadra') ||
                 'Não informado'}{' '}
               | Lote:{' '}
-              {falecido.Lote ||
+              {campo(falecido, 'Lote') ||
                 'Não informado'}
             </Text>
 
@@ -426,7 +436,7 @@ mostrarMensagem(
             <Pressable
               style={styles.botaoExcluir}
               onPress={() =>
-                excluirFalecido(falecido.Id)
+                excluirFalecido(campo(falecido, 'Id'))
               }
             >
               <Text style={styles.textoBotao}>

@@ -1,5 +1,5 @@
-import { useLocalSearchParams, router } from 'expo-router';
-import { Linking, Pressable,StyleSheet,Text,View, ScrollView,} from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, View, } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 
@@ -13,8 +13,13 @@ export default function Mapa() {
     lote,
   } = useLocalSearchParams();
 
-  const lat = Number(latitude);
-  const lng = Number(longitude);
+  const paraNumero = (valor: unknown) => {
+    if (valor === undefined || valor === null) return NaN;
+    return Number(String(valor).trim().replace(',', '.'));
+  };
+
+  const lat = paraNumero(latitude);
+  const lng = paraNumero(longitude);
 
   const procurarFloricultura = () => {
   const url = `https://www.google.com/maps/search/floricultura/@${lat},${lng},15z`;
