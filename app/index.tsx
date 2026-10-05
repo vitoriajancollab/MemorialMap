@@ -74,7 +74,7 @@ export default function BoasVindas() {
               styles.botaoEntrar,
               pressed && styles.botaoPressionado,
             ]}
-            onPress={() => router.navigate('/login')}
+            onPress={() => router.navigate('/escolha-email')}
           >
             <Text style={styles.textoBotao}>
               ENTRAR
