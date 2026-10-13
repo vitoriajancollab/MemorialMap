@@ -69,7 +69,7 @@ export default function EscolhaEmail() {
 
             <View style={styles.textoContainer}>
               <Text style={styles.tituloOpcao}>
-                Quero continuar sem e-mail
+                Não quero usar e-mail
               </Text>
 
               <Text style={styles.descricaoOpcao}>

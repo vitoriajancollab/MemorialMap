@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useRef } from 'react';
 import {
   Animated,
@@ -95,8 +96,17 @@ export default function MenuLateral({
 
           {/* CONFIGURAÇÕES */}
           <Pressable
-            style={styles.opcaoMenu}
-            onPress={fecharMenu}
+             style={styles.opcaoMenu}
+             onPress={() => {
+             Animated.timing(menuAnim, {
+             toValue: -320,
+             duration: 300,
+             useNativeDriver: true,
+             }).start(() => {
+             onFechar();
+             router.push('/configuracoes');
+             });
+              }}
           >
             <Text style={styles.iconeOpcao}>
               ⚙️
@@ -109,12 +119,15 @@ export default function MenuLateral({
 
           {/* CEMITÉRIOS */}
           <Pressable
-            style={styles.opcaoMenu}
-            onPress={fecharMenu}
-          >
-            <Text style={styles.iconeOpcao}>
+                style={styles.opcaoMenu}
+                onPress={() => {
+                fecharMenu();
+                router.push('/pesquisa');
+                }}
+              >
+             <Text style={styles.iconeOpcao}>
               🪦
-            </Text>
+             </Text>
 
             <Text style={styles.textoOpcao}>
               Cemitérios
@@ -124,7 +137,16 @@ export default function MenuLateral({
           {/* CONTATO */}
           <Pressable
             style={styles.opcaoMenu}
-            onPress={fecharMenu}
+            onPress={() => {
+             Animated.timing(menuAnim, {
+             toValue: -320,
+             duration: 300,
+              useNativeDriver: true,
+            }).start(() => {
+              onFechar();
+              router.push('/contato');
+             });
+             }}
           >
             <Text style={styles.iconeOpcao}>
               ✉️
@@ -138,7 +160,10 @@ export default function MenuLateral({
           {/* SOBRE NÓS */}
           <Pressable
             style={styles.opcaoMenu}
-            onPress={fecharMenu}
+           onPress={() => {
+            fecharMenu();
+            router.push('/sobre');
+            }}
           >
             <Text style={styles.iconeOpcao}>
               ℹ️
