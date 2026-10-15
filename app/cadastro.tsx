@@ -1,13 +1,6 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {Pressable,ScrollView,StyleSheet,Text,TextInput,View,} from 'react-native';
 import { API_URL } from '../constants/Api';
 
 export default function Cadastro() {

@@ -1,17 +1,13 @@
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import {
-  ImageBackground,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { useEffect, useState, } from 'react';
+import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View,} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../constants/Api';
+import { useFonte } from '@/contexts/FonteContext';
+
 export default function Index() {
+
+  const { tamanhoFonte } = useFonte();
   const [nome, setNome] = useState('');
   const [nomeUsuario, setNomeUsuario] = useState('');
   const [resultado, setResultado] = useState<any[]>([]);
@@ -138,8 +134,13 @@ export default function Index() {
                Olá, {nomeUsuario}! 👋
                </Text>
              ) : (
-               <Text style={styles.titulo}>
-                 Encontre uma pessoa
+               <Text
+                 style={[
+                  styles.titulo,
+                 { fontSize: 22 * tamanhoFonte },
+                 ]}
+                >
+                Encontre uma pessoa
                </Text>
               )}
 

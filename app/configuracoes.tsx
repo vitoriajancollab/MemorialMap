@@ -1,14 +1,12 @@
 
 import { router } from 'expo-router';
-import {
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import Slider from '@react-native-community/slider';
+import { useFonte } from '@/contexts/FonteContext';
 
 export default function Configuracoes() {
+  const { tamanhoFonte, alterarTamanhoFonte } = useFonte();
+
   return (
     <ScrollView
       style={styles.container}
@@ -16,7 +14,6 @@ export default function Configuracoes() {
     >
       {/* CABEÇALHO */}
       <View style={styles.cabecalho}>
-
         <Text style={styles.icone}>⚙️</Text>
 
         <Text style={styles.titulo}>
@@ -28,14 +25,41 @@ export default function Configuracoes() {
         </Text>
       </View>
 
+      {/* ACESSIBILIDADE */}
+      <View style={styles.secaoAcessibilidade}>
+        <Text style={styles.tituloAcessibilidade}>
+          Acessibilidade
+        </Text>
+
+        <Text style={styles.descricao}>
+          Ajuste o tamanho das letras para facilitar a leitura.
+        </Text>
+
+        <View style={styles.linhaTamanho}>
+          <Text style={styles.letraPequena}>A</Text>
+
+          <Slider
+            style={styles.slider}
+            minimumValue={0.8}
+            maximumValue={1.5}
+            step={0.1}
+            value={tamanhoFonte}
+            onValueChange={alterarTamanhoFonte}
+            minimumTrackTintColor="#65419A"
+            maximumTrackTintColor="#D0D5DD"
+            thumbTintColor="#65419A"
+          />
+
+          <Text style={styles.letraGrande}>A</Text>
+        </View>
+      </View>
+
       {/* MEUS DADOS */}
       <View style={styles.cartao}>
         <Text style={styles.iconeOpcao}>👤</Text>
 
         <View style={styles.informacoes}>
-          <Text style={styles.tituloOpcao}>
-            Meus dados
-          </Text>
+          <Text style={styles.tituloOpcao}>Meus dados</Text>
 
           <Text style={styles.descricao}>
             Consulte suas informações de usuário.
@@ -48,9 +72,7 @@ export default function Configuracoes() {
         <Text style={styles.iconeOpcao}>🔔</Text>
 
         <View style={styles.informacoes}>
-          <Text style={styles.tituloOpcao}>
-            Notificações
-          </Text>
+          <Text style={styles.tituloOpcao}>Notificações</Text>
 
           <Text style={styles.descricao}>
             Preferências de avisos e novidades.
@@ -63,9 +85,7 @@ export default function Configuracoes() {
         <Text style={styles.iconeOpcao}>🛡️</Text>
 
         <View style={styles.informacoes}>
-          <Text style={styles.tituloOpcao}>
-            Privacidade
-          </Text>
+          <Text style={styles.tituloOpcao}>Privacidade</Text>
 
           <Text style={styles.descricao}>
             Informações sobre sua privacidade.
@@ -78,12 +98,12 @@ export default function Configuracoes() {
         Memorial Map • Versão 1.0.0
       </Text>
 
-        <Pressable
-          style={styles.botaoVoltar}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.textoVoltar}>‹ Voltar</Text>
-        </Pressable>
+      <Pressable
+        style={styles.botaoVoltar}
+        onPress={() => router.back()}
+      >
+        <Text style={styles.textoVoltar}>‹ Voltar</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -177,5 +197,45 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#98A2B3',
     marginTop: 25,
+  },
+
+  secaoAcessibilidade: {
+    backgroundColor: '#FFFFFF',
+    padding: 18,
+    borderRadius: 16,
+    marginBottom: 18,
+    borderWidth: 1,
+    borderColor: '#D8C9F0',
+  },
+
+  tituloAcessibilidade: {
+    fontSize: 19,
+    fontWeight: '800',
+    color: '#243B53',
+    marginBottom: 8,
+  },
+
+  linhaTamanho: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 12,
+  },
+
+  letraPequena: {
+    fontSize: 14,
+    color: '#65419A',
+    fontWeight: '600',
+  },
+
+  letraGrande: {
+    fontSize: 25,
+    color: '#65419A',
+    fontWeight: '800',
+  },
+
+  slider: {
+    flex: 1,
+    height: 40,
   },
 });

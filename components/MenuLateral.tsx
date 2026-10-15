@@ -56,7 +56,6 @@ export default function MenuLateral({
       {/* FUNDO ESCURO */}
       {aberto && (
         <Pressable
-          style={styles.fundoMenu}
           onPress={fecharMenu}
         />
       )}
@@ -242,22 +241,11 @@ const styles = StyleSheet.create({
   },
 
   iconeMenu: {
-    fontSize: 28,
+    fontSize: 30,
     color: '#243B53',
     fontWeight: '700',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
-
-
-  fundoMenu: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
-    zIndex: 20,
-  },
-
 
   menuLateral: {
     position: 'absolute',

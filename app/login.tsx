@@ -1,14 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import {
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { ImageBackground, Pressable,StyleSheet, Text, TextInput, View,} from 'react-native';
 
 export default function Login() {
   const { email } = useLocalSearchParams();
@@ -38,7 +31,7 @@ export default function Login() {
       emailUsuario.trim()
     );
 
-    router.navigate('/pesquisa');
+    router.navigate('/cidades');
   }
 
   return (

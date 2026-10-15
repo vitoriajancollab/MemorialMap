@@ -1,13 +1,7 @@
 import { router } from 'expo-router';
-import {
-  Animated,
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Animated,  ImageBackground, Pressable, StyleSheet, Text, View,} from 'react-native';
 import { useEffect, useRef } from 'react';
+
 
 export default function BoasVindas() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
