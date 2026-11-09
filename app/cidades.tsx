@@ -1,14 +1,15 @@
 
 import { router } from 'expo-router';
 import { useState } from 'react';
-import {ImageBackground,Pressable,ScrollView,StyleSheet,Text,TextInput,View,} from 'react-native';
+import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View, } from 'react-native';
 
+
+/*ADICIONO CIDADES*/
 const cidades = [
   { nome: 'Agudos', estado: 'SP', cemiterios: 3 },
   { nome: 'Bauru', estado: 'SP', cemiterios: 5 },
   { nome: 'Lençóis Paulista', estado: 'SP', cemiterios: 4 },
   { nome: 'Marília', estado: 'SP', cemiterios: 6 },
-  { nome: 'Jaú', estado: 'SP', cemiterios: 4 },
 ];
 
 export default function Cidades() {
@@ -59,8 +60,14 @@ export default function Cidades() {
               key={cidade.nome}
               style={styles.cartaoCidade}
               onPress={() => {
-  alert(`Você selecionou ${cidade.nome}!`);
-}}
+              router.push({
+              pathname: '/cemiterios',
+              params: {
+              cidade: cidade.nome,
+              estado: cidade.estado,
+       },
+      });
+     }}
             >
               <View style={styles.imagemCidade}>
                 <Text style={styles.iconeCidade}>🏙️</Text>

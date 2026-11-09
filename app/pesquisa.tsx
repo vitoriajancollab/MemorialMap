@@ -1,11 +1,13 @@
-import { router } from 'expo-router';
-import { useEffect, useState, } from 'react';
-import {ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View,} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '../constants/Api';
 import { useFonte } from '@/contexts/FonteContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState, } from 'react';
+import { ImageBackground, Pressable, ScrollView, StyleSheet, Text, TextInput, View, } from 'react-native';
+import { API_URL } from '../constants/Api';
 
 export default function Index() {
+
+  const { cidade, estado } = useLocalSearchParams<{cidade?: string;estado?: string;}>();
 
   const { tamanhoFonte } = useFonte();
   const [nome, setNome] = useState('');
@@ -144,9 +146,11 @@ export default function Index() {
                </Text>
               )}
 
-             <Text style={styles.subtitulo}>
-              Pesquise pelo nome para localizar uma pessoa
-             </Text>
+              <Text style={styles.subtitulo}>
+               {cidade && estado
+                ? `Pesquisando em ${cidade} - ${estado}`
+               : 'Pesquise pelo nome para localizar uma pessoa'}
+               </Text>
 
             <TextInput
               style={styles.input}

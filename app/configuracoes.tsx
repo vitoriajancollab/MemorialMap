@@ -1,8 +1,7 @@
 
+import { useFonte } from '@/contexts/FonteContext';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Slider from '@react-native-community/slider';
-import { useFonte } from '@/contexts/FonteContext';
 
 export default function Configuracoes() {
   const { tamanhoFonte, alterarTamanhoFonte } = useFonte();
@@ -25,73 +24,40 @@ export default function Configuracoes() {
         </Text>
       </View>
 
-      {/* ACESSIBILIDADE */}
-      <View style={styles.secaoAcessibilidade}>
-        <Text style={styles.tituloAcessibilidade}>
-          Acessibilidade
-        </Text>
-
-        <Text style={styles.descricao}>
-          Ajuste o tamanho das letras para facilitar a leitura.
-        </Text>
-
-        <View style={styles.linhaTamanho}>
-          <Text style={styles.letraPequena}>A</Text>
-
-          <Slider
-            style={styles.slider}
-            minimumValue={0.8}
-            maximumValue={1.5}
-            step={0.1}
-            value={tamanhoFonte}
-            onValueChange={alterarTamanhoFonte}
-            minimumTrackTintColor="#65419A"
-            maximumTrackTintColor="#D0D5DD"
-            thumbTintColor="#65419A"
-          />
-
-          <Text style={styles.letraGrande}>A</Text>
-        </View>
-      </View>
 
       {/* MEUS DADOS */}
-      <View style={styles.cartao}>
-        <Text style={styles.iconeOpcao}>👤</Text>
+       <Pressable
+      style={styles.cartao}
+     onPress={() => router.push('/perfil')}
+     >
+      <Text style={styles.iconeOpcao}>👤</Text>
 
-        <View style={styles.informacoes}>
-          <Text style={styles.tituloOpcao}>Meus dados</Text>
+     <View style={styles.informacoes}>
+     <Text style={styles.tituloOpcao}>Meus dados</Text>
 
-          <Text style={styles.descricao}>
-            Consulte suas informações de usuário.
-          </Text>
-        </View>
-      </View>
+     <Text style={styles.descricao}>
+      Consulte suas informações de usuário.
+     </Text>
+     </View>
+     </Pressable>
 
       {/* NOTIFICAÇÕES */}
-      <View style={styles.cartao}>
-        <Text style={styles.iconeOpcao}>🔔</Text>
+<Pressable
+  style={styles.cartao}
+  onPress={() => router.push('/notificacoes')}
+>
+  <Text style={styles.iconeOpcao}>🔔</Text>
 
-        <View style={styles.informacoes}>
-          <Text style={styles.tituloOpcao}>Notificações</Text>
+  <View style={styles.informacoes}>
+    <Text style={styles.tituloOpcao}>Notificações</Text>
 
-          <Text style={styles.descricao}>
-            Preferências de avisos e novidades.
-          </Text>
-        </View>
-      </View>
+    <Text style={styles.descricao}>
+      Preferências de avisos e novidades.
+    </Text>
+  </View>
+</Pressable>
 
-      {/* PRIVACIDADE */}
-      <View style={styles.cartao}>
-        <Text style={styles.iconeOpcao}>🛡️</Text>
-
-        <View style={styles.informacoes}>
-          <Text style={styles.tituloOpcao}>Privacidade</Text>
-
-          <Text style={styles.descricao}>
-            Informações sobre sua privacidade.
-          </Text>
-        </View>
-      </View>
+  
 
       {/* RODAPÉ */}
       <Text style={styles.versao}>
@@ -199,43 +165,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
 
-  secaoAcessibilidade: {
-    backgroundColor: '#FFFFFF',
-    padding: 18,
-    borderRadius: 16,
-    marginBottom: 18,
-    borderWidth: 1,
-    borderColor: '#D8C9F0',
-  },
+  
 
-  tituloAcessibilidade: {
-    fontSize: 19,
-    fontWeight: '800',
-    color: '#243B53',
-    marginBottom: 8,
-  },
-
-  linhaTamanho: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginTop: 12,
-  },
-
-  letraPequena: {
-    fontSize: 14,
-    color: '#65419A',
-    fontWeight: '600',
-  },
-
-  letraGrande: {
-    fontSize: 25,
-    color: '#65419A',
-    fontWeight: '800',
-  },
-
-  slider: {
-    flex: 1,
-    height: 40,
-  },
+  
 });
