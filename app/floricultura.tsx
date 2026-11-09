@@ -1,13 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import {
-  Image,
-  Linking,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image,Linking,Pressable, ScrollView,StyleSheet,Text,View,} from 'react-native';
 
 export default function Floricultura() {
       const { latitude, longitude } = useLocalSearchParams();

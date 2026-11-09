@@ -1,14 +1,6 @@
 
 import { router } from 'expo-router';
-import {
-  Image,
-  Linking,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Image, Linking,Pressable,ScrollView,StyleSheet,Text,View,} from 'react-native';
 
 export default function Contato() {
   const emailContato = 'contato@memorialmap.com.br';

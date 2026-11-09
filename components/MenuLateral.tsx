@@ -1,12 +1,6 @@
 import { router } from 'expo-router';
 import { useRef } from 'react';
-import {
-  Animated,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Animated, Pressable,StyleSheet, Text,View,} from 'react-native';
 
 type MenuLateralProps = {
   aberto: boolean;

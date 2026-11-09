@@ -1,11 +1,5 @@
 import { router } from 'expo-router';
-import {
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {ImageBackground, Pressable,StyleSheet,Text,View,} from 'react-native';
 
 export default function EscolhaEmail() {
   function comEmail() {
